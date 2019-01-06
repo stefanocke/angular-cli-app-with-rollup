@@ -4,6 +4,7 @@
 /dist
 /tmp
 /out-tsc
+/dist-rollup
 
 # dependencies
 /node_modules

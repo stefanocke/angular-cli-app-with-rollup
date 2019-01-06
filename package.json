@@ -7,7 +7,16 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "ngc-app-watch": "ngc -w -p src/tsconfig.app.json",
+    "ngc-app": "ngc -p src/tsconfig.app.json",
+    "rollup-clean": "rimraf out-tsc && rimraf dist-rollup",
+    "rollup-libs": "mkdirp out-tsc/app/src/libs && cp src/libs/*.js out-tsc/app/src/libs/ && rollup -c rollup.config.libs.js",
+    "rollup-app-watch": "rollup -c -w",
+    "rollup-serve": "serve dist-rollup",
+    "rollup-copy-index": "mkdirp dist-rollup && cp src/index.rollup.html dist-rollup/index.html",
+    "rollup-dev": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs && npm-run-all --parallel ngc-app-watch rollup-app-watch rollup-serve",
+    "rollup-prod": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && && npm run rollup-libs && rollup -c"
   },
   "private": true,
   "dependencies": {
@@ -21,6 +30,7 @@
     "@angular/router": "~7.1.0",
     "core-js": "^2.5.4",
     "rxjs": "~6.3.3",
+    "systemjs": "^2.1.1",
     "tslib": "^1.9.0",
     "zone.js": "~0.8.26"
   },
@@ -43,6 +53,11 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
-    "typescript": "~3.1.6"
+    "typescript": "~3.1.6",
+    "npm-run-all": "^4.1.5",
+    "rollup": "^1.0.0",
+    "rollup-plugin-alias": "^1.5.1",
+    "rollup-plugin-node-resolve": "^4.0.0",
+    "serve": "^10.1.1"
   }
 }
