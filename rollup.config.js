@@ -39,7 +39,7 @@ const resolveCommonImports = {
 } 
 
 export default [{
-  input: "out-tsc/app/src/main.js",
+  input: "out-tsc/app/main.js",
   output: [
     // ES module version, for modern browsers
     {
@@ -67,7 +67,7 @@ export default [{
 
 },
 {
-  input: "out-tsc/app/src/app/dyn/dyn.module.ngfactory.js",
+  input: "out-tsc/app/app/dyn/dyn.module.js",
   output: [
     // ES module version, for modern browsers
     {

@@ -4,7 +4,7 @@ import { DynComponent } from './dyn.component';
 import { MyCommonModule } from '../common/common.module';
 
 @NgModule({
-  declarations: [    
+  declarations: [
     DynComponent
   ],
   imports: [
@@ -14,3 +14,5 @@ import { MyCommonModule } from '../common/common.module';
   providers: []
 })
 export class DynModule { }
+
+export { DynComponent };

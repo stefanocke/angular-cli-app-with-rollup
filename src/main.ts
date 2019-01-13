@@ -1,12 +1,12 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, ɵNgModuleFactory as NgModuleFactory } from '@angular/core';
 import { platformBrowser } from '@angular/platform-browser';
 
-import { AppModuleNgFactory } from './app/app.module.ngfactory';
 import { environment } from './environments/environment';
+import { AppModule } from './app/app.module';
 
 if (environment.production) {
   enableProdMode();
 }
 
-platformBrowser().bootstrapModuleFactory(AppModuleNgFactory)
+platformBrowser().bootstrapModuleFactory(new NgModuleFactory(AppModule))
   .catch(err => console.error(err));

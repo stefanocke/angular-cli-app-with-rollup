@@ -21,7 +21,7 @@ function packages(libEntryPoints) {
 
 export default [ 
 {
-  input: "out-tsc/app/src/polyfills.js",
+  input: "out-tsc/app/polyfills.js",
   output: [
     {
       file: "dist-rollup/polyfills.js",
@@ -43,7 +43,7 @@ export default [
   const otherLibs = [...libEntryPoints];
   otherLibs.splice(libEntryPoints.indexOf(key), 1)
   return {
-    input: "out-tsc/app/src/libs/" + key,
+    input: "out-tsc/app/libs/" + key,
     output: [
       // ES module version, for modern browsers
       {

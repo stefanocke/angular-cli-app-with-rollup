@@ -1,4 +1,4 @@
-import { Component, NgModuleFactory, Injector, NgModule, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ɵNgModuleFactory as NgModuleFactory, Injector, NgModule, ViewChild, ViewContainerRef } from '@angular/core';
 
 declare var System: any;
 
@@ -16,14 +16,11 @@ export class AppComponent {
   constructor(private injector: Injector) {
     System.import("/dyn.js").then(m => {
       
-      const moduleFactory = m['DynModuleNgFactory'] as NgModuleFactory<any>;
+      const moduleFactory = new NgModuleFactory(m['DynModule']);
       const moduleRef = moduleFactory.create(injector);
-      let componentType = this.findComponentInModule(moduleRef.instance.constructor, 'dyn');
+      let componentType = m['DynComponent'];
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
-
-
       this.container.createComponent(componentFactory, 0, moduleRef.injector);
-
       
     });
   }
