@@ -1,4 +1,5 @@
 import resolve from 'rollup-plugin-node-resolve';
+import { uglify } from "rollup-plugin-uglify";
 import * as libs from './libs.js';
 
 
@@ -38,6 +39,7 @@ export default [{
       main: true,
       browser: true
     })
+    //uglify()
   ],
   external: libs.isLib
 
@@ -65,6 +67,7 @@ export default [{
       main: true,
       browser: true
     })
+    //uglify()
   ],
   external: libs.isLib
 }
