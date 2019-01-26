@@ -27,7 +27,21 @@
 
 	<script src="./polyfills.js"></script>
 	<script>
+			//pre-fetching libs. useful?
+			System.import('@angular/core');
+			System.import('@angular/common');
+			System.import('@angular/platform-browser');
+			System.import('rxjs');
+			System.import('rxjs/operators');
+			System.import('app-common');
+
+			//Load Application
 			System.import('./main.js');
+
+			//pre-fetching dynamic modules
+			//maybe difficult, since we don't know the fingerprint in advance...
+			//-> dynamic on server-side
+			System.import('./dyn.js');
 	</script>
 </body>
 </html>

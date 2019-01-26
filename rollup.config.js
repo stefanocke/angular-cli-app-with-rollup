@@ -20,11 +20,11 @@ export default [{
   input: "out-tsc/app/main.js",
   output: [
     // ES module version, for modern browsers
-    {
-      file: "dist-rollup/modules/main.js",
-      format: "esm",
-      sourcemap: true
-    },
+    // {
+    //   file: "dist-rollup/modules/main.js",
+    //   format: "esm",
+    //   sourcemap: true
+    // },
     // SystemJS version, for older browsers
     {
       file: "dist-rollup/main.js",
@@ -38,8 +38,8 @@ export default [{
       jsnext: true,
       main: true,
       browser: true
-    })
-    //uglify()
+    }),
+    uglify()
   ],
   external: libs.isLib
 
@@ -48,11 +48,11 @@ export default [{
   input: "out-tsc/app/app/dyn/dyn.module.js",
   output: [
     // ES module version, for modern browsers
-    {
-      file: "dist-rollup/modules/dyn.js",
-      format: "esm",
-      sourcemap: true
-    },
+    // {
+    //   file: "dist-rollup/modules/dyn.js",
+    //   format: "esm",
+    //   sourcemap: true
+    // },
     // SystemJS version, for older browsers
     {
       file: "dist-rollup/dyn.js",
@@ -66,8 +66,8 @@ export default [{
       jsnext: true,
       main: true,
       browser: true
-    })
-    //uglify()
+    }),
+    uglify()
   ],
   external: libs.isLib
 }
