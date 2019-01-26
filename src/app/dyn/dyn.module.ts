@@ -10,9 +10,10 @@ import { MyCommonModule } from '../common/common.module';
   imports: [
     MyCommonModule
   ],
+  exports: [DynComponent],
   entryComponents: [DynComponent],
   providers: []
 })
 export class DynModule { }
 
-export { DynComponent };
+//export { DynComponent };

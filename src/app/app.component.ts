@@ -16,9 +16,13 @@ export class AppComponent {
   constructor(private injector: Injector) {
     System.import("/dyn.js").then(m => {
       
-      const moduleFactory = new NgModuleFactory(m['DynModule']);
+      const moduleType = m['DynModule'];
+      const moduleFactory = new NgModuleFactory(moduleType);
       const moduleRef = moduleFactory.create(injector);
-      let componentType = m['DynComponent'];
+      //Requires additional export statement for DynComponent.
+      //Does not work by selector.
+      //let componentType = m['DynComponent'];
+      let componentType = this.findComponentInModule(moduleType, 'dyn'); 
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
       this.container.createComponent(componentFactory, 0, moduleRef.injector);
       
@@ -26,23 +30,14 @@ export class AppComponent {
   }
 
   /**
-   * Find Component-Type in Module-Type.
-   * TODO: This is based on decorator metadata, which will be removed in ivy and replaced by ngComponentDef and ngModuleDef
+   * This uses the internal APIs ngComponentDef and ngModuleDef and may break!
    */
   private findComponentInModule(moduleType: any, componentSelector: string): any {
-    let moduleMetadata = this.getNgModuleMetadata(moduleType);
-    return this.findComponent(moduleMetadata.entryComponents || moduleMetadata.exports, componentSelector);
+    return this.findComponent(moduleType.ngModuleDef.exports, componentSelector);
   }
 
   private findComponent(componentTypes: any[], componentSelector: string): any {
-    return componentTypes.find((c: any) => this.getComponentMetadata(c).selector === componentSelector);
+    return componentTypes.find((c: any) => c.ngComponentDef.selectors[0][0] === componentSelector);
   }
 
-  private getNgModuleMetadata(moduleType: any): NgModule {
-    return moduleType['__annotations__'].find(a => a instanceof NgModule);
-  }
-
-  private getComponentMetadata(componentType: any): Component {
-    return componentType['__annotations__'].find(a => a instanceof Component);
-  }
 }
