@@ -1,6 +1,9 @@
 import resolve from 'rollup-plugin-node-resolve';
-import { uglify } from "rollup-plugin-uglify";
+import { terser } from "rollup-plugin-terser";
 import * as libs from './libs.js';
+
+//TODO: env
+const isProduction = true
 
 export default [ 
 {
@@ -18,7 +21,10 @@ export default [
       jsnext: true,
       main: true,
       browser: true
-    })
+    }),
+    ... isProduction? [
+      terser()
+    ] : []
   ]
 
 },
@@ -48,7 +54,9 @@ export default [
         main: true,
         browser: true
       }),
-      uglify()
+      ... isProduction? [
+        terser()
+      ] : []
     ],
     //All other libs are externals to this lib
     external: otherPackages

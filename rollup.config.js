@@ -1,7 +1,9 @@
 import resolve from 'rollup-plugin-node-resolve';
-import { uglify } from "rollup-plugin-uglify";
+import { terser } from "rollup-plugin-terser";
 import * as libs from './libs.js';
 
+//TODO: env
+const isProduction = false
 
 //Maps relative imports of modules from "common" to absolute "app-common"
 const resolveCommonImports = {
@@ -39,7 +41,9 @@ export default [{
       main: true,
       browser: true
     }),
-    uglify()
+    ... isProduction? [
+      terser()
+    ] : []
   ],
   external: libs.isLib
 
@@ -67,7 +71,9 @@ export default [{
       main: true,
       browser: true
     }),
-    uglify()
+    ... isProduction? [
+      terser()
+    ] : []
   ],
   external: libs.isLib
 }
