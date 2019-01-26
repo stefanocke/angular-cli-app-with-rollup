@@ -1,29 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
-import alias from 'rollup-plugin-alias';
+import * as libs from './libs.js';
 
-// key is entry point for the lib
-// value is array of packages provided by the lib 
-const libs = {
-  'angular-core.js': ['@angular/core'],
-  'angular-common.js': ['@angular/common'],
-  'angular-platform-browser.js': ['@angular/platform-browser'],
-  'rxjs.js': ['rxjs'],
-  'rxjs-operators.js': ['rxjs/operators'],
-  'app-common.js': ['app-common']
-};
-
-const libEntryPoints = Object.keys(libs);
-
-// Determine all packages of the given libs
-function packages(libEntryPoints) {
-  return libEntryPoints.map(key => libs[key]).reduce((acc, val) => acc.concat(val), []);
-}
-
-//Checks if a module id belongs to a lib
-function isLib(id) {
-  var result = packages(libEntryPoints).find(p => id === p)
-  return !!result
-}
 
 //Maps relative imports of modules from "common" to absolute "app-common"
 const resolveCommonImports = {
@@ -31,12 +8,12 @@ const resolveCommonImports = {
     // Quick an dirty. 
     // TODO: 1. Check id relative. 2. Resolve relative to importer. 3. Check if /app/common
     // and make configurable
-    if(importee.includes('/common/')) {
+    if (importee.includes('/common/')) {
       return 'app-common'
     }
     return undefined;
   }
-} 
+}
 
 export default [{
   input: "out-tsc/app/main.js",
@@ -62,8 +39,7 @@ export default [{
       browser: true
     })
   ],
-  external: isLib
-  //experimentalCodeSplitting: true
+  external: libs.isLib
 
 },
 {
@@ -90,8 +66,6 @@ export default [{
       browser: true
     })
   ],
-  external: isLib
-  //experimentalCodeSplitting: true
-
+  external: libs.isLib
 }
 ];

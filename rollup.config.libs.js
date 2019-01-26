@@ -1,23 +1,5 @@
 import resolve from 'rollup-plugin-node-resolve';
-
-// key is entry point for the lib
-// value is array of packages provided by the lib 
-const libs = {
-  'angular-core.js': ['@angular/core'],
-  'angular-common.js': ['@angular/common'],
-  'angular-platform-browser.js': ['@angular/platform-browser'],
-  'rxjs.js': ['rxjs'],
-  'rxjs-operators.js': ['rxjs/operators'],
-  'app-common.js': ['app-common']
-};
-
-const libEntryPoints = Object.keys(libs);
-
-// Determine all packages of the given libs
-function packages(libEntryPoints) {
-  return libEntryPoints.map(key => libs[key]).reduce((acc, val) => acc.concat(val), []);
-}
-
+import * as libs from './libs.js';
 
 export default [ 
 {
@@ -39,21 +21,21 @@ export default [
   ]
 
 },
-...libEntryPoints.map(key => {
-  const otherLibs = [...libEntryPoints];
-  otherLibs.splice(libEntryPoints.indexOf(key), 1)
+...libs.packages.map(p => {
+  const otherPackages = [...libs.packages];
+  otherPackages.splice(libs.packages.indexOf(p), 1)
   return {
-    input: "out-tsc/app/libs/" + key,
+    input: libs.input(p),
     output: [
       // ES module version, for modern browsers
       {
-        file: "dist-rollup/modules/libs/" + key,
+        file: "dist-rollup/modules/libs/" + p + ".js",
         format: "esm",
         sourcemap: true
       },
       // SystemJS version, for older browsers
       {
-        file: "dist-rollup/libs/" + key,
+        file: "dist-rollup/libs/" + p + ".js",
         format: "system",
         sourcemap: true
       }
@@ -67,7 +49,7 @@ export default [
       })
     ],
     //All other libs are externals to this lib
-    external: packages(otherLibs)
+    external: otherPackages
   }
 })
 
