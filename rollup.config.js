@@ -5,6 +5,11 @@ import * as libs from './libs.js';
 //TODO: env
 const isProduction = false
 
+const bundles = {
+  'main.js': 'main.js',
+  'dyn.js': 'app/dyn/dyn.module.js'
+}
+
 //Maps relative imports of modules from "common" to absolute "app-common"
 const resolveCommonImports = {
   resolveId: (importee, importer) => {
@@ -18,63 +23,22 @@ const resolveCommonImports = {
   }
 }
 
-export default [{
-  input: "out-tsc/app/main.js",
-  output: [
-    // ES module version, for modern browsers
-    // {
-    //   file: "dist-rollup/modules/main.js",
-    //   format: "esm",
-    //   sourcemap: true
-    // },
-    // SystemJS version, for older browsers
-    {
-      file: "dist-rollup/main.js",
-      format: "system",
-      sourcemap: true
-    }
-  ],
-  plugins: [
-    resolveCommonImports,
-    resolve({
-      jsnext: true,
-      main: true,
-      browser: true
-    }),
-    ... isProduction? [
-      terser()
-    ] : []
-  ],
-  external: libs.isLib
-
-},
-{
-  input: "out-tsc/app/app/dyn/dyn.module.js",
-  output: [
-    // ES module version, for modern browsers
-    // {
-    //   file: "dist-rollup/modules/dyn.js",
-    //   format: "esm",
-    //   sourcemap: true
-    // },
-    // SystemJS version, for older browsers
-    {
-      file: "dist-rollup/dyn.js",
-      format: "system",
-      sourcemap: true
-    }
-  ],
-  plugins: [
-    resolveCommonImports,
-    resolve({
-      jsnext: true,
-      main: true,
-      browser: true
-    }),
-    ... isProduction? [
-      terser()
-    ] : []
-  ],
-  external: libs.isLib
-}
-];
+export default Object.keys(bundles).map(b => {
+  return {
+    input: "out-tsc/app/" + bundles[b],
+    output: [
+      // ES module version, for modern browsers
+      // { file: "dist-rollup/"+b, format: "esm", sourcemap: true },
+      // SystemJS version, for older browsers
+      { file: "dist-rollup/" + b, format: "system", sourcemap: true }
+    ],
+    plugins: [
+      resolveCommonImports,
+      resolve({ jsnext: true, main: true, browser: true }),
+      ...isProduction ? [
+        terser()
+      ] : []
+    ],
+    external: libs.isLib
+  }
+});
