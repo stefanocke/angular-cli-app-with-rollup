@@ -4,7 +4,7 @@ import  commonjs  from "rollup-plugin-commonjs";
 import * as libs from './libs.js';
 
 //TODO: env
-const isProduction = true
+const isProduction = false;
 
 export default [ 
 {
