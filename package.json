@@ -14,9 +14,8 @@
     "rollup-clean": "rimraf out-tsc && rimraf dist-rollup",
     "rollup-libs": "rollup -c rollup.config.libs.js",
     "rollup-app-watch": "rollup -c -w",
-    "rollup-serve": "serve dist-rollup",
     "rollup-copy-index": "mkdirp dist-rollup && cp src/index.rollup.html dist-rollup/index.html",
-    "rollup-dev": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs && npm-run-all --parallel ngc-app-watch rollup-app-watch rollup-serve",
+    "rollup-dev": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs && npm-run-all --parallel ngc-app-watch rollup-app-watch",
     "rollup-prod": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs && rollup -c"
   },
   "private": true,
@@ -57,7 +56,7 @@
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.3",
     "rollup-plugin-commonjs": "^9.2.0",
-    "serve": "^10.1.1",
+    "rollup-plugin-live-server": "^1.0.1",
     "ts-node": "~7.0.0",
     "tslint": "~5.11.0",
     "typescript": "~3.1.6"

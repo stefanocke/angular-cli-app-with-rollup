@@ -1,9 +1,11 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import * as libs from './libs.js';
+import liveServer from 'rollup-plugin-live-server';
 
 //TODO: env
 const isProduction = false
+const isDev = true
 
 const bundles = {
   'main.js': 'main.js',
@@ -24,6 +26,16 @@ export default Object.keys(bundles).map(b => {
       resolve({ jsnext: true, main: true, browser: true }),
       ...isProduction ? [
         terser()
+      ] : [],
+      ...isDev ? [
+        liveServer({
+          port: 5555,
+          root: "dist-rollup",
+          file: "index.html",
+          mount: [],
+          open: false,
+          wait: 300
+        })
       ] : []
     ],
     external: libs.isLib
