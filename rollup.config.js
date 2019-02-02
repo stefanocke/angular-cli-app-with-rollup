@@ -1,6 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
-import * as libs from './libs.js';
+import * as libs from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
 
 //TODO: env

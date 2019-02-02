@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import  commonjs  from "rollup-plugin-commonjs";
-import * as libs from './libs.js';
+import * as libs from './build/libs.js';
 
 //TODO: env
 const isProduction = false;
