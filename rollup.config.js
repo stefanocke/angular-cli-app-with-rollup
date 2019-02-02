@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import * as libs from './libs.js';
-import liveServer from 'rollup-plugin-live-server';
+import { browsersync } from './build/rollup-plugin-browsersync';
 
 //TODO: env
 const isProduction = false
@@ -28,13 +28,10 @@ export default Object.keys(bundles).map(b => {
         terser()
       ] : [],
       ...isDev ? [
-        liveServer({
-          port: 5555,
-          root: "dist-rollup",
-          file: "index.html",
-          mount: [],
-          open: false,
-          wait: 300
+        browsersync({
+          server: 'dist-rollup',
+          host: 'localhost',
+          port: 5000
         })
       ] : []
     ],
