@@ -1,0 +1,17 @@
+{
+    "libs": {
+        "@angular/core": {},
+        "@angular/common": {},
+        "@angular/platform-browser": {},
+        "@angular/forms": {},
+        "@angular/router": {},
+        "rxjs": {},
+        "rxjs/operators": {},
+        "app/common": {
+            "entry": "app/common/index.js"
+        }
+    },
+    "importAlias": {
+        "app/common": "app/common"
+    }
+}

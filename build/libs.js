@@ -1,23 +1,16 @@
 import * as path from 'path';
+import stripJsonComments from 'strip-json-comments';
+import {readFileSync} from 'fs';
+
+// All imports that refer to modules within that directory or below are rewritten to imports to 'app/common' 
+const buildConfig = JSON.parse(readFileSync('build.json'));
 
 // key is the package / module.
 // value can be empty in case of a node-module.
-// when bundeling from src, an entry point must be given ("index.js")
-const libs = {
-    '@angular/core': {},
-    '@angular/common': {},
-    '@angular/platform-browser': {},
-    '@angular/forms': {},
-    '@angular/router': {},
-    'rxjs': {},
-    'rxjs/operators': {},
-    'app/common': { entry: 'app/common/index.js' }
-};
-
-//All imports that refere to modules within that directory or below are rewritten to imports to 'app/common' 
-const importAlias = {
-    'app/common': 'app/common'
-}  
+// when bundeling from src, an "entry" must be given ("index.js")
+const libs = buildConfig.libs;
+ 
+const importAlias = buildConfig.importAlias;
 
 export const packages = Object.keys(libs);
 
