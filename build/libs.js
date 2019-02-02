@@ -12,7 +12,7 @@ const importAlias = buildConfig.importAlias;
 export const packages = Object.keys(libs);
 
 export function input(package_) {
-  return libs[package_].entry && "out-tsc/app/" + libs[package_].entry || package_;
+  return libs[package_].entry && buildConfig.ngcOut + '/' + libs[package_].entry || package_;
 }
 
 //Checks if a module id belongs to a lib
@@ -25,7 +25,7 @@ export const resolveRelativeLibImports = {
   resolveId: (importee, importer) => {
     if (importee.startsWith('./') || importee.startsWith('../')) {
 
-      const absolute = path.relative('out-tsc/app/', path.resolve(path.dirname(importer), importee)).replace(/\\/g, '/');
+      const absolute = path.relative(buildConfig.ngcOut, path.resolve(path.dirname(importer), importee)).replace(/\\/g, '/');
       //Find longest matching prefix
       const candidates = Object.keys(importAlias).filter(k => absolute.startsWith(k + '/')).sort((a, b) => a.length > b.length);
       return candidates.length > 0 && importAlias[candidates[0]] || undefined

@@ -13,5 +13,16 @@
     },
     "importAlias": {
         "app/common": "app/common"
+    },
+    "ngcOut": "out-tsc/app", 
+    "env": {
+        "dev" : {
+            "dist": "dist-rollup",
+            "serve": true
+        },
+        "prod" : {
+            "dist": "dist-rollup-prod",
+            "uglify": true
+        } 
     }
 }

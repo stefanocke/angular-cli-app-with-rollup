@@ -11,13 +11,15 @@
     "e2e": "ng e2e",
     "ngc-app-watch": "ngc -w -p src/tsconfig.app.json",
     "ngc-app": "ngc -p src/tsconfig.app.json",
-    "rollup-clean": "rimraf out-tsc && rimraf dist-rollup",
-    "rollup-libs": "rollup -c rollup.config.libs.js",
-    "rollup-app-watch": "rollup -c -w",
+    "rollup-clean-dev": "rimraf out-tsc && rimraf dist-rollup",
+    "rollup-clean-prod": "rimraf out-tsc && rimraf dist-rollup-prod",
+    "rollup-libs-dev": "rollup -c rollup.config.libs.js --environment BUILD:dev",
+    "rollup-libs-prod": "rollup -c rollup.config.libs.js --environment BUILD:prod",
+    "rollup-app-watch": "rollup -c -w --environment BUILD:dev",
     "rollup-copy-index": "mkdirp dist-rollup && cp src/index.rollup.html dist-rollup/index.html",
-    "rollup-dev": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs && npm run rollup-dev-app",
+    "rollup-dev": "npm run rollup-clean-dev && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs-dev && npm run rollup-dev-app",
     "rollup-dev-app": "npm-run-all --parallel ngc-app-watch rollup-app-watch",
-    "rollup-prod": "npm run rollup-clean && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs && rollup -c"
+    "rollup-prod": "npm run rollup-clean-prod && npm run rollup-copy-index && npm run ngc-app && npm run rollup-libs-prod && rollup -c --environment BUILD:prod"
   },
   "private": true,
   "dependencies": {
