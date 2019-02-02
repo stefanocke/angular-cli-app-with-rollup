@@ -2,7 +2,8 @@ import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import commonjs from "rollup-plugin-commonjs";
 import * as libs from './build/libs.js';
-import { buildConfig } from './build/config'
+import { buildConfig } from './build/config';
+import hash from 'rollup-plugin-hash';
 
 export default [
   {
@@ -53,7 +54,11 @@ export default [
           main: true,
           browser: true
         }),
-        buildConfig.uglify && terser()
+        buildConfig.uglify && terser(),
+        buildConfig.hash && hash({
+          dest: buildConfig.dist + '/libs/' + p +'.[hash:10].js',
+          manifest: buildConfig.dist + '/libs/' + p + '.manifest.json'
+        })
       ],
       //All other libs are externals to this lib
       external: otherPackages

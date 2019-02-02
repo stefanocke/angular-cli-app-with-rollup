@@ -22,7 +22,8 @@
         },
         "prod" : {
             "dist": "dist-rollup-prod",
-            "uglify": true
+            "uglify": true,
+            "hash": true
         } 
     }
 }
