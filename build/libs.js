@@ -1,23 +1,40 @@
 import * as path from 'path';
 import { buildConfig } from './config'
 
-// key is the package / module.
+// key is the module specifier.
 // value can be empty in case of a node-module.
 // when bundeling from src, an "entry" must be given ("index.js")
 const libs = buildConfig.libs;
 
-// key is the package / module. value is the prefix of the normalized absolute import path
+// key is the module specifier as in "libs". value is the prefix of the normalized absolute import path
 const importAlias = buildConfig.importAlias;
 
-export const packages = Object.keys(libs);
+export const libsModuleSpecifiers = Object.keys(libs);
 
-export function input(package_) {
-  return libs[package_].entry && buildConfig.ngcOut + '/' + libs[package_].entry || package_;
+/**
+ * @param {string} moduleSpecifier the module specifier for the lib
+ * @returns the input for bundeling the lib
+ */
+export function libRollupInput(moduleSpecifier) {
+  return libs[moduleSpecifier].entry && buildConfig.ngcOut + '/' + libs[moduleSpecifier].entry || moduleSpecifier;
 }
 
-//Checks if a module id belongs to a lib
-export function isLib(id) {
-  return packages.find(p => id === p);
+/** 
+ * @param {string} moduleSpecifier the module specifier for the lib
+ * @param {string} suffix the suffix. default is 'js'
+ */
+export function libRollupOutput(moduleSpecifier, suffix = 'js') {
+  return buildConfig.dist + '/libs/' + moduleSpecifier + '.' + suffix;
+}
+
+/**
+ * Checks if a module identified by the specifier is a lib.
+ * 
+ * @param {string} moduleSpecifier 
+ * @returns true, if lib
+ */
+export function isLib(moduleSpecifier) {
+  return !!libsModuleSpecifiers.find(ms => moduleSpecifier === ms);
 }
 
 //Maps relative imports to modules of a'common lib' to one module like "app/common"

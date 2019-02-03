@@ -1,8 +1,8 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
-import * as libs from './build/libs.js';
+import { buildConfig } from './build/config';
+import { resolveRelativeLibImports, isLib} from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
-import { buildConfig } from './build/config'
 
 const bundles = {
   'main.js': 'main.js',
@@ -19,7 +19,7 @@ export default Object.keys(bundles).map(b => {
       { file: buildConfig.dist + '/' + b, format: "system", sourcemap: true }
     ],
     plugins: [
-      libs.resolveRelativeLibImports,
+      resolveRelativeLibImports,
       resolve({ jsnext: true, main: true, browser: true }),
       buildConfig.uglify && terser(),
       buildConfig.serve ? [
@@ -30,6 +30,6 @@ export default Object.keys(bundles).map(b => {
         })
       ] : []
     ],
-    external: libs.isLib
+    external: isLib
   }
 });
