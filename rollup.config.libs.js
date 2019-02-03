@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import commonjs from "rollup-plugin-commonjs";
-import { libsModuleSpecifiers, libRollupInput, libRollupOutput} from './build/libs.js';
+import { libsModuleSpecifiers, libRollupInput, libRollupOutput, isLib} from './build/libs.js';
 import { buildConfig } from './build/config';
 import hash from 'rollup-plugin-hash';
 
@@ -29,8 +29,6 @@ export default [
 
   },
   ...libsModuleSpecifiers.map(ms => {
-    const otherPackages = [...libsModuleSpecifiers];
-    otherPackages.splice(libsModuleSpecifiers.indexOf(ms), 1)
     return {
       input: libRollupInput(ms),
       output: [
@@ -61,7 +59,7 @@ export default [
         })
       ],
       //All other libs are externals to this lib
-      external: otherPackages
+      external: otherMs => otherMs !== ms && isLib(otherMs) 
     }
   })
 
