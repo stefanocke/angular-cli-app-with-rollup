@@ -19,6 +19,16 @@ export function libRollupInput(moduleSpecifier) {
   return libs[moduleSpecifier].entry && buildConfig.ngcOut + '/' + libs[moduleSpecifier].entry || moduleSpecifier;
 }
 
+/**
+ * 
+ * @param {string} moduleSpecifier 
+ * @returns {boolean} whether to use the source maps provided by the lib. For libs compiled from typescript this is generally advisable. 
+ *  For angular itself it does currently not work, likely due to the modifications applied by ivy-ngcc (or due to some outdated rollup-sourcemaps plugin?).
+ */
+export function useLibSourceMaps(moduleSpecifier) {
+  return libs[moduleSpecifier].sourceMaps;
+}
+
 /** 
  * @param {string} moduleSpecifier the module specifier for the lib
  * @param {string} suffix the suffix. default is 'js'

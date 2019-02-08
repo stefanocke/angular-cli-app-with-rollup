@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import commonjs from "rollup-plugin-commonjs";
-import { libsModuleSpecifiers, libRollupInput, libRollupOutput, isLib} from './build/libs.js';
+import { libsModuleSpecifiers, libRollupInput, libRollupOutput, isLib, useLibSourceMaps} from './build/libs.js';
 import { buildConfig } from './build/config';
 import hash from 'rollup-plugin-hash';
 import sourcemaps from 'rollup-plugin-sourcemaps';
@@ -47,7 +47,7 @@ export default [
         }
       ],
       plugins: [
-        sourcemaps(),
+        useLibSourceMaps(ms) && sourcemaps(),
         resolve({
           jsnext: true,
           main: true,

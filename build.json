@@ -5,10 +5,11 @@
         "@angular/platform-browser": {},
         "@angular/forms": {},
         "@angular/router": {},
-        "rxjs": {},
-        "rxjs/operators": {},
+        "rxjs": { "sourceMaps": true},
+        "rxjs/operators": {"sourceMaps": true},
         "app/common": {
-            "entry": "app/common/index.js"
+            "entry": "app/common/index.js",
+            "sourceMaps": true
         }
     },
     "importAlias": {
