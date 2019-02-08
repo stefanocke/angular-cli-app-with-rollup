@@ -3,6 +3,7 @@ import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
 import { resolveRelativeLibImports, isLib} from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
+import sourcemaps from 'rollup-plugin-sourcemaps';
 
 const bundles = {
   'main.js': 'main.js',
@@ -16,9 +17,14 @@ export default Object.keys(bundles).map(b => {
       // ES module version, for modern browsers
       // { file: "dist-rollup/"+b, format: "esm", sourcemap: true },
       // SystemJS version, for older browsers
-      { file: buildConfig.dist + '/' + b, format: "system", sourcemap: true }
+      { 
+        file: buildConfig.dist + '/' + b, 
+        format: 'system', 
+        sourcemap: true 
+      }
     ],
     plugins: [
+      sourcemaps(),
       resolveRelativeLibImports,
       resolve({ jsnext: true, main: true, browser: true }),
       buildConfig.uglify && terser(),

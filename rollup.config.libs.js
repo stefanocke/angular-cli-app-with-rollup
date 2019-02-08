@@ -4,6 +4,7 @@ import commonjs from "rollup-plugin-commonjs";
 import { libsModuleSpecifiers, libRollupInput, libRollupOutput, isLib} from './build/libs.js';
 import { buildConfig } from './build/config';
 import hash from 'rollup-plugin-hash';
+import sourcemaps from 'rollup-plugin-sourcemaps';
 
 export default [
   {
@@ -16,7 +17,7 @@ export default [
       }
     ],
     plugins: [
-      //alias({ rxjs: __dirname + '/node_modules/rxjs-es' }),
+      sourcemaps(),
       resolve({
         jsnext: true,
         main: true,
@@ -46,7 +47,7 @@ export default [
         }
       ],
       plugins: [
-        //alias({ rxjs: __dirname + '/node_modules/rxjs-es' }),
+        sourcemaps(),
         resolve({
           jsnext: true,
           main: true,
@@ -54,7 +55,7 @@ export default [
         }),
         buildConfig.uglify && terser(),
         buildConfig.hash && hash({
-          dest: libRollupOutput(ms, '[hash:10].js'),
+          dest: libRollupOutput(ms, '.[hash:10].js'),
           manifest: libRollupOutput(ms, 'manifest.json')
         })
       ],
