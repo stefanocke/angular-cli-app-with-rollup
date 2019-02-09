@@ -14,8 +14,7 @@ export class AppComponent {
   container: ViewContainerRef;
 
   constructor(private injector: Injector) {
-    System.import("/dyn.js").then(m => {
-      
+    System.import("/dyn.js").then(m => { 
       const moduleType = m['DynModule'];
       const moduleFactory = new NgModuleFactory(moduleType);
       const moduleRef = moduleFactory.create(injector);
@@ -25,7 +24,6 @@ export class AppComponent {
       let componentType = this.findComponentInModule(moduleType, 'dyn'); 
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
       this.container.createComponent(componentFactory, 0, moduleRef.injector); 
-      
     });
   }
 
