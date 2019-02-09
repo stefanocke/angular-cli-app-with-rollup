@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { DynComponent } from './dyn.component';
-import { MyCommonModule } from '../common/common.module';
+import { MyCommonModule } from 'app/common';
 
 @NgModule({
   declarations: [
