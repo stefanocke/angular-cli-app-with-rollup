@@ -24,7 +24,7 @@ export class AppComponent {
       //let componentType = m['DynComponent'];
       let componentType = this.findComponentInModule(moduleType, 'dyn'); 
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
-      this.container.createComponent(componentFactory, 0, moduleRef.injector);
+      this.container.createComponent(componentFactory, 0, moduleRef.injector); 
       
     });
   }
