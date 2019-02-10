@@ -19,12 +19,15 @@
     "env": {
         "dev" : {
             "dist": "dist-rollup",
-            "serve": true
+            "uglify": false,
+            "indexHtml": true,
+            "serve": true      
         },
         "prod" : {
             "dist": "dist-rollup-prod",
             "uglify": true,
-            "hash": true
+            "hash": true,
+            "indexHtml": true
         } 
     }
 }

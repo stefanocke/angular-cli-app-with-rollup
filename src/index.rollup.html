@@ -11,18 +11,8 @@
 <body>
 	<app-root></app-root>
 	
-
 	<script type="systemjs-importmap">
-		{
-		  "imports": {
-				"@angular/core": "/libs/@angular/core.js",
-				"@angular/common": "/libs/@angular/common.js",
-				"@angular/platform-browser": "/libs/@angular/platform-browser.js",
-				"rxjs": "/libs/rxjs.js",
-				"rxjs/operators": "/libs/rxjs/operators.js",
-				"app/common": "/libs/app/common.js"
-		  }
-		}
+		{{=it.importMap}}
 	</script>
 
 	<script src="./polyfills.js"></script>
@@ -38,10 +28,6 @@
 			//Load Application
 			System.import('./main.js');
 
-			//pre-fetching dynamic modules
-			//maybe difficult, since we don't know the fingerprint in advance...
-			//-> dynamic on server-side
-			System.import('./dyn.js');
 	</script>
 </body>
 </html>
