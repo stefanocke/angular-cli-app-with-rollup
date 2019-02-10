@@ -1,6 +1,6 @@
 # AngularCliAppWithRollup
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.1.4.
+This project uses Angular 8.x or above.
 
 ## Rollup Build
 
@@ -12,7 +12,7 @@ The dynamic module (dyn.js) would be typically in separate project but is includ
 
 Both, the main application and the dynamic module are build with rollup. The libs are defined to be externals for the application and the dynamic module and are also bundled with rollup. 
 
-For loading the bundles / modules, SystemJS 2.x is used.
+For loading the bundles / modules, SystemJS 3.x is used.
 
 ### Development Server
 
