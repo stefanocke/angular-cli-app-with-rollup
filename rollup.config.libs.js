@@ -55,7 +55,7 @@ export default [
         }),
         buildConfig.uglify && terser(),
         buildConfig.hash && hash({
-          dest: libRollupOutput(ms, '.[hash:10].js'),
+          dest: libRollupOutput(ms, '[hash:10].js'),
           manifest: libRollupOutput(ms, 'manifest.json')
         })
       ],
