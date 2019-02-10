@@ -1,5 +1,6 @@
+import { existsSync, readFileSync } from 'fs';
 import * as path from 'path';
-import { buildConfig } from './config'
+import { buildConfig } from './config';
 
 // key is the module specifier.
 // value can be empty in case of a node-module.
@@ -38,6 +39,15 @@ export function libRollupOutput(moduleSpecifier, suffix = 'js') {
 }
 
 /**
+ * Suffix template for hashed Files.
+ */
+export const hashTemplateSuffix = '[hash:10].js';
+/**
+ * Suffix for manifest file for hashed files.
+ */
+export const manifestSuffix = 'manifest.json';
+
+/**
  * Checks if a module identified by the specifier is a lib.
  * 
  * @param {string} moduleSpecifier 
@@ -45,6 +55,26 @@ export function libRollupOutput(moduleSpecifier, suffix = 'js') {
  */
 export function isLib(moduleSpecifier) {
   return !!libsModuleSpecifiers.find(ms => moduleSpecifier === ms);
+}
+
+/**
+ * Provides an import map for the libs as to be used with SystemJS.
+ * See https://github.com/systemjs/systemjs/blob/master/docs/import-maps.md.
+ * For hashed files, the manifests are used to get the path.
+ */
+export function libsImportMap() {
+  const imports = {};
+  libsModuleSpecifiers.forEach(ms => {
+    var libPath = libRollupOutput(ms);
+    //Read manifest as determine hashed file path
+    var manifestPath = libRollupOutput(ms, manifestSuffix);
+    if (existsSync(manifestPath)) {
+      const manifest = JSON.parse(readFileSync(manifestPath));
+      libPath = manifest[libPath];
+    }
+    imports[ms] = path.relative(buildConfig.dist, libPath).replace(/\\/g, '/')
+  })
+  return { imports }
 }
 
 

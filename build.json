@@ -20,6 +20,7 @@
         "dev" : {
             "dist": "dist-rollup",
             "uglify": false,
+            "hash": true,
             "indexHtml": true,
             "serve": true      
         },

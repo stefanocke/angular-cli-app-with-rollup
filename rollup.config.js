@@ -1,11 +1,10 @@
 import { compile as compileDotTemplate } from 'dot';
-import * as path from 'path';
 import resolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { isLib, libRollupOutput, libsModuleSpecifiers, resolveRelativeLibImports } from './build/libs';
+import { isLib, resolveRelativeLibImports, libsImportMap } from './build/libs';
 import { browsersync } from './build/rollup-plugin-browsersync';
 
 const bundles = {
@@ -53,11 +52,3 @@ export default Object.keys(bundles).map(b => {
   }
 });
 
-function libsImportMap() {
-  const imports = {};
-  libsModuleSpecifiers.forEach(ms => {
-    //TODO: Use manifest to get filenem with hash
-    imports[ms] = path.relative(buildConfig.dist, libRollupOutput(ms)).replace(/\\/g, '/')
-  })
-  return { imports }
-}

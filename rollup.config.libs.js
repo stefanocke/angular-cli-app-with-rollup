@@ -1,7 +1,7 @@
 import resolve from 'rollup-plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import commonjs from "rollup-plugin-commonjs";
-import { libsModuleSpecifiers, libRollupInput, libRollupOutput, isLib, useLibSourceMaps} from './build/libs.js';
+import { libsModuleSpecifiers, libRollupInput, libRollupOutput, isLib, useLibSourceMaps, manifestSuffix, hashTemplateSuffix} from './build/libs.js';
 import { buildConfig } from './build/config';
 import hash from 'rollup-plugin-hash';
 import sourcemaps from 'rollup-plugin-sourcemaps';
@@ -55,8 +55,8 @@ export default [
         }),
         buildConfig.uglify && terser(),
         buildConfig.hash && hash({
-          dest: libRollupOutput(ms, '[hash:10].js'),
-          manifest: libRollupOutput(ms, 'manifest.json')
+          dest: libRollupOutput(ms, hashTemplateSuffix),
+          manifest: libRollupOutput(ms, manifestSuffix)
         })
       ],
       //All other libs are externals to this lib
