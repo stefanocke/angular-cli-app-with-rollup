@@ -4,7 +4,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { isLib, resolveRelativeLibImports, libsImportMap } from './build/libs';
+import { isLib, resolveRelativeLibImports, libsImportMap, isFingerprinted } from './build/libs';
 import { browsersync } from './build/rollup-plugin-browsersync';
 
 const bundles = {
@@ -45,7 +45,15 @@ export default Object.keys(bundles).map(b => {
       buildConfig.serve && browsersync({
         server: buildConfig.dist,
         host: 'localhost',
-        port: 5000
+        port: 5000,
+        middleware: function (req, res, next) {
+          //Cache fingerprinted resources 'forever'
+          if(isFingerprinted(req.originalUrl)) {
+            res.setHeader('Cache-Control', 'max-age=31536000');
+          }
+          console.log(req.originalUrl);
+          next();
+        }
       })
     ],
     external: isLib

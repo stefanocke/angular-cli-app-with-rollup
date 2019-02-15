@@ -42,6 +42,15 @@ export function libRollupOutput(moduleSpecifier, suffix = 'js') {
  * Suffix template for hashed Files.
  */
 export const hashTemplateSuffix = '[hash:10].js';
+
+/**
+ * Checks if the given URL pointe to a fingeprinted javascript file (lib or polyfills)
+ * @param {string} url 
+ */
+export function isFingerprinted(url) {
+  return !!url.match(/\.[a-z0-9]{10}\.js$/)
+}
+
 /**
  * Suffix for manifest file for hashed files.
  */
