@@ -44,11 +44,11 @@ export function libRollupOutput(moduleSpecifier, suffix = 'js') {
 export const hashTemplateSuffix = '[hash:10].js';
 
 /**
- * Checks if the given URL pointe to a fingeprinted javascript file (lib or polyfills)
+ * Checks if the given URL pointe to a fingeprinted javascript bundle (lib or polyfills) or its source map.
  * @param {string} url 
  */
 export function isFingerprinted(url) {
-  return !!url.match(/\.[a-z0-9]{10}\.js$/)
+  return !!url.match(/\.[a-z0-9]{10}\.js(?:\.map)?$/)
 }
 
 /**
