@@ -1,5 +1,10 @@
 {
     "libs": {
+        "polyfills": {
+            "entry": "polyfills.js",
+            "polyfill": true,
+            "needsCommonJS": true
+        },
         "@angular/core": {},
         "@angular/common": {},
         "@angular/platform-browser": {},

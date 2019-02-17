@@ -16,15 +16,16 @@ export const libsModuleSpecifiers = Object.keys(libs);
  * @param {string} moduleSpecifier the module specifier for the lib
  * @returns the input for bundeling the lib
  */
-export function libRollupInput(moduleSpecifier) {
+export function rollupInput(moduleSpecifier) {
   return libs[moduleSpecifier].entry && buildConfig.ngcOut + '/' + libs[moduleSpecifier].entry || moduleSpecifier;
 }
 
 /**
+ * Whether to use the source maps provided by the lib. For libs compiled from typescript this is generally advisable. 
+ * For angular itself it does currently not work, likely due to the modifications applied by ivy-ngcc (or due to some outdated rollup-sourcemaps plugin?).
  * 
  * @param {string} moduleSpecifier 
- * @returns {boolean} whether to use the source maps provided by the lib. For libs compiled from typescript this is generally advisable. 
- *  For angular itself it does currently not work, likely due to the modifications applied by ivy-ngcc (or due to some outdated rollup-sourcemaps plugin?).
+ * @returns {boolean} true if sourceMaps of teh lib shall be used
  */
 export function useLibSourceMaps(moduleSpecifier) {
   return libs[moduleSpecifier].sourceMaps;
@@ -34,8 +35,8 @@ export function useLibSourceMaps(moduleSpecifier) {
  * @param {string} moduleSpecifier the module specifier for the lib
  * @param {string} suffix the suffix. default is 'js'
  */
-export function libRollupOutput(moduleSpecifier, suffix = 'js') {
-  return buildConfig.dist + '/libs/' + moduleSpecifier + '.' + suffix;
+export function rollupOutput(moduleSpecifier, suffix = 'js') {
+  return buildConfig.dist + '/' + moduleSpecifier + '.' + suffix;
 }
 
 /**
@@ -63,7 +64,27 @@ export const manifestSuffix = 'manifest.json';
  * @returns true, if lib
  */
 export function isLib(moduleSpecifier) {
-  return !!libsModuleSpecifiers.find(ms => moduleSpecifier === ms);
+  return !!libsModuleSpecifiers.find(ms => moduleSpecifier === ms) && !isPolyfill(moduleSpecifier);
+}
+
+/**
+ * Checks if a module identified by the specifier is a polyfill (or multiple).
+ * 
+ * @param {string} moduleSpecifier 
+ * @returns true, if polyfill
+ */
+export function isPolyfill(moduleSpecifier) {
+  return !!libs[moduleSpecifier].polyfill;
+}
+
+/**
+ * Checks if a module identified by the specifier needs CommonJS resolver (for "require").
+ * 
+ * @param {string} moduleSpecifier 
+ * @returns true, if needs commonJs resolver
+ */
+export function needsCommonJS(moduleSpecifier) {
+  return !!libs[moduleSpecifier].needsCommonJS;
 }
 
 /**
@@ -73,16 +94,18 @@ export function isLib(moduleSpecifier) {
  */
 export function libsImportMap() {
   const imports = {};
-  libsModuleSpecifiers.forEach(ms => {
-    var libPath = libRollupOutput(ms);
-    //Read manifest as determine hashed file path
-    var manifestPath = libRollupOutput(ms, manifestSuffix);
-    if (existsSync(manifestPath)) {
-      const manifest = JSON.parse(readFileSync(manifestPath));
-      libPath = manifest[libPath];
-    }
-    imports[ms] = path.relative(buildConfig.dist, libPath).replace(/\\/g, '/')
-  })
+  libsModuleSpecifiers
+    .filter(ms => !isPolyfill(ms))
+    .forEach(ms => {
+      var libPath = rollupOutput(ms);
+      //Read manifest as determine hashed file path
+      var manifestPath = rollupOutput(ms, manifestSuffix);
+      if (existsSync(manifestPath)) {
+        const manifest = JSON.parse(readFileSync(manifestPath));
+        libPath = manifest[libPath];
+      }
+      imports[ms] = path.relative(buildConfig.dist, libPath).replace(/\\/g, '/')
+    })
   return { imports }
 }
 
