@@ -97,20 +97,30 @@ export function libsImportMap() {
   libsModuleSpecifiers
     .filter(ms => !isPolyfill(ms))
     .forEach(ms => {
-      var libPath = rollupOutput(ms);
-      //Read manifest as determine hashed file path
-      var manifestPath = rollupOutput(ms, manifestSuffix);
-      if (existsSync(manifestPath)) {
-        const manifest = JSON.parse(readFileSync(manifestPath));
-        libPath = manifest[libPath];
-      }
-      imports[ms] = path.relative(buildConfig.dist, libPath).replace(/\\/g, '/')
+      imports[ms] = relativeLibPath(ms);
     })
   return { imports }
 }
 
+/**
+ * Detemines the path of a lib or polyfill bundle relative to index.html. If a fingerprinted version exists, that one is used.
+ * 
+ * @param {string} moduleSpecifier the module specifier for the lib or polyfill
+ * @returns the relative path
+ */
+export function relativeLibPath(moduleSpecifier) {
+  var libPath = rollupOutput(moduleSpecifier);
+  //Read manifest and determine hashed file path
+  var manifestPath = rollupOutput(moduleSpecifier, manifestSuffix);
+  if (existsSync(manifestPath)) {
+    const manifest = JSON.parse(readFileSync(manifestPath));
+    libPath = manifest[libPath];
+  }
+  return path.relative(buildConfig.dist, libPath).replace(/\\/g, '/');
+}
 
-//Maps relative imports to modules of a'common lib' to one module like "app/common"
+
+/** Maps relative imports to modules of a'common lib' to one module like "app/common" */
 export const resolveRelativeLibImports = {
   resolveId: (importee, importer) => {
     if (importee.startsWith('./') || importee.startsWith('../')) {
@@ -123,3 +133,4 @@ export const resolveRelativeLibImports = {
     return undefined;
   }
 }
+

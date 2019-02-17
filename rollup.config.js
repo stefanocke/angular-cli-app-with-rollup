@@ -4,7 +4,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { isLib, resolveRelativeLibImports, libsImportMap, isFingerprinted } from './build/libs';
+import { isLib, resolveRelativeLibImports, libsImportMap, isFingerprinted, relativeLibPath } from './build/libs';
 import { browsersync } from './build/rollup-plugin-browsersync';
 
 const bundles = {
@@ -38,6 +38,8 @@ export default Object.keys(bundles).map(b => {
           func: (templateStr, templateData) => compileDotTemplate(templateStr)(templateData),
           path: 'src/index.rollup.html',
           data: {
+            //TODO: Support different polyfill bundles that are loaded conditionally based on browser version?
+            polyfillsPath: relativeLibPath('polyfills'),
             importMap: JSON.stringify(libsImportMap())
           }
         }
