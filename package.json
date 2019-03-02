@@ -13,12 +13,10 @@
     "ngc-app": "ngc -p src/tsconfig.app.json",
     "rollup-clean-dev": "rimraf out-tsc && rimraf dist-rollup",
     "rollup-clean-prod": "rimraf out-tsc && rimraf dist-rollup-prod",
-    "rollup-libs-dev": "rollup -c rollup.config.libs.js --environment BUILD:dev",
-    "rollup-libs-prod": "rollup -c rollup.config.libs.js --environment BUILD:prod",
-    "rollup-app-watch": "rollup -c -w --environment BUILD:dev",
-    "rollup-dev": "npm run rollup-clean-dev && npm run ngc-app && npm run rollup-libs-dev && npm run rollup-dev-app",
-    "rollup-dev-app": "npm-run-all --parallel ngc-app-watch rollup-app-watch",
-    "rollup-prod": "npm run rollup-clean-prod && npm run ngc-app && npm run rollup-libs-prod && rollup -c --environment BUILD:prod"
+    "rollup-watch": "rollup -c -w --environment BUILD:dev",
+    "rollup-dev": "npm run rollup-clean-dev && npm run ngc-app && npm run rollup-dev-app",
+    "rollup-dev-app": "npm-run-all --parallel ngc-app-watch rollup-watch",
+    "rollup-prod": "npm run rollup-clean-prod && npm run ngc-app && rollup -c --environment BUILD:prod"
   },
   "private": true,
   "dependencies": {

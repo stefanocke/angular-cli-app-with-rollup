@@ -1,39 +1,55 @@
 import { compile as compileDotTemplate } from 'dot';
+import commonjs from "rollup-plugin-commonjs";
+import hash from 'rollup-plugin-hash';
 import resolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { isLib, resolveRelativeLibImports, libsImportMap, isFingerprinted, relativeLibPath } from './build/libs';
+import { hashTemplateSuffix, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
 
-const bundles = {
-  'main.js': 'main.js',
-  'dyn.js': 'app/dyn/dyn.module.js'
-}
-
-export default Object.keys(bundles).map(b => {
+export default libsModuleSpecifiers.map(ms => {
   return {
-    input: buildConfig.ngcOut + '/' + bundles[b],
-    output: [
-      // ES module version, for modern browsers
-      // { file: "dist-rollup/"+b, format: "esm", sourcemap: true },
-      // SystemJS version, for older browsers
-      {
-        file: buildConfig.dist + '/' + b,
-        format: 'system',
-        sourcemap: true
-      }
-    ],
+    input: rollupInput(ms),
+    output: isPolyfill(ms) ?
+      [
+        {
+          file: rollupOutput(ms),
+          format: "iife",
+          sourcemap: true
+        }
+      ] : [
+        // ES module version, for modern browsers
+        // {
+        //   file: "dist-rollup/modules/libs/" + p + ".js",
+        //   format: "esm",
+        //   sourcemap: true
+        // },
+        // SystemJS version, for older browsers
+        {
+          file: rollupOutput(ms),
+          format: "system",
+          sourcemap: true
+        }
+      ],
     plugins: [
-      sourcemaps(),
-      resolveRelativeLibImports,
-      resolve({ jsnext: true, main: true, browser: true }),
+      useLibSourceMaps(ms) && sourcemaps(),
+      resolve({
+        jsnext: true,
+        main: true,
+        browser: true
+      }),
+      needsCommonJS(ms) && commonjs({}),
       buildConfig.uglify && terser(),
-      buildConfig.indexHtml && b === 'main.js' && staticSite({
+      buildConfig.hash && hash({
+        dest: rollupOutput(ms, hashTemplateSuffix),
+        manifest: rollupOutput(ms, manifestSuffix)
+      }),
+      buildConfig.indexHtml && ms === 'main' && staticSite({
         dir: buildConfig.dist,
         template: {
-          // We use the dafault template engine of staticSite plugin but provide it as custom function
+          // We use the default template engine of staticSite plugin but provide it as custom function
           // to prevent injection of the bundle as script tag (we need to load it by import()).
           func: (templateStr, templateData) => compileDotTemplate(templateStr)(templateData),
           path: 'src/index.rollup.html',
@@ -44,13 +60,14 @@ export default Object.keys(bundles).map(b => {
           }
         }
       }),
-      buildConfig.serve && browsersync({
+      //TODO: Watch other bundles than main? 
+      buildConfig.serve && ms === 'main' && browsersync({
         server: buildConfig.dist,
         host: 'localhost',
         port: 5000,
         middleware: function (req, res, next) {
           //Cache fingerprinted resources 'forever'
-          if(isFingerprinted(req.originalUrl)) {
+          if (isFingerprinted(req.originalUrl)) {
             res.setHeader('Cache-Control', 'max-age=31536000');
           }
           console.log(req.originalUrl);
@@ -58,7 +75,7 @@ export default Object.keys(bundles).map(b => {
         }
       })
     ],
-    external: isLib
+    //All other libs are externals to this lib
+    external: otherMs => otherMs !== ms && isLib(otherMs)
   }
 });
-

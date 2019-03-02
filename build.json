@@ -15,7 +15,9 @@
         "app/common": {
             "entry": "app/common/index.js",
             "sourceMaps": true
-        }
+        },
+        "dyn": { "entry": "app/dyn/dyn.module.js", "sourceMaps": true},
+        "main": { "entry": "main.js", "sourceMaps": true}
     },
     "importAlias": {
         "app/common": "app/common"
