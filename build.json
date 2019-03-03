@@ -23,7 +23,8 @@
     "importAlias": {
         "app/common": "app/common"
     },
-    "ngcOut": "out-tsc/app", 
+    "ngcOut": "out-tsc/app",
+    "indexHtmlTemplate": "src/index.rollup.html", 
     "env": {
         "dev" : {
             "dist": "dist-rollup",

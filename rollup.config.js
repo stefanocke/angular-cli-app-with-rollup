@@ -37,7 +37,7 @@ export default libsModuleSpecifiers.map(ms => {
           // We use the default template engine of staticSite plugin but provide it as custom function
           // to prevent injection of the bundle as script tag (we need to load it by import()).
           func: (templateStr, templateData) => compileDotTemplate(templateStr)(templateData),
-          path: 'src/index.rollup.html',
+          path: buildConfig.indexHtmlTemplate,
           data: {
             //TODO: Support different polyfill bundles that are loaded conditionally based on browser version?
             polyfillsPath: relativeLibPath('polyfills'),
