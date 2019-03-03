@@ -6,7 +6,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { hashTemplateSuffix, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
+import { resolveRelativeLibImports, hashTemplateSuffix, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
 
 export default libsModuleSpecifiers.map(ms => {
@@ -35,6 +35,7 @@ export default libsModuleSpecifiers.map(ms => {
       ],
     plugins: [
       useLibSourceMaps(ms) && sourcemaps(),
+      resolveRelativeLibImports,
       resolve({
         jsnext: true,
         main: true,
@@ -60,7 +61,7 @@ export default libsModuleSpecifiers.map(ms => {
           }
         }
       }),
-      //TODO: Watch other bundles than main? 
+      //TODO: Watch other bundles than main? But index.html must be available before starting browsersync...
       buildConfig.serve && ms === 'main' && browsersync({
         server: buildConfig.dist,
         host: 'localhost',

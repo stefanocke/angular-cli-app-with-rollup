@@ -125,10 +125,23 @@ export const resolveRelativeLibImports = {
   resolveId: (importee, importer) => {
     if (importee.startsWith('./') || importee.startsWith('../')) {
 
+      //the 'absolute' path of the importee below 'src'
       const absolute = path.relative(buildConfig.ngcOut, path.resolve(path.dirname(importer), importee)).replace(/\\/g, '/');
-      //Find longest matching prefix
+      //the 'absolute' path of the importer below 'src'
+      const importerAbsolute = path.relative(buildConfig.ngcOut, importer).replace(/\\/g, '/');
+
+      //Find longest matching prefix within import alias keys
       const candidates = Object.keys(importAlias).filter(k => absolute.startsWith(k + '/')).sort((a, b) => a.length > b.length);
-      return candidates.length > 0 && importAlias[candidates[0]] || undefined
+      if (candidates.length > 0) {
+        console.log(importer + " " + importee + " " + candidates[0] + " " + absolute + " " +importerAbsolute);
+      }
+
+      if (candidates.length > 0) {
+        //keep path relative, if importer is part of the same 'lib'
+        const importerHasSamePrefix = importerAbsolute.startsWith(candidates[0] + '/');
+
+        return !importerHasSamePrefix && importAlias[candidates[0]] || undefined
+      }
     }
     return undefined;
   }
