@@ -120,7 +120,7 @@ export function relativeLibPath(moduleSpecifier) {
 }
 
 
-/** Maps relative imports to modules of a'common lib' to one module like "app/common" */
+/** Rollup plugin to map relative imports to modules of a'common lib' to one module like "app/common". */
 export const resolveRelativeLibImports = {
   resolveId: (importee, importer) => {
     if (importee.startsWith('./') || importee.startsWith('../')) {
@@ -132,9 +132,6 @@ export const resolveRelativeLibImports = {
 
       //Find longest matching prefix within import alias keys
       const candidates = Object.keys(importAlias).filter(k => absolute.startsWith(k + '/')).sort((a, b) => a.length > b.length);
-      if (candidates.length > 0) {
-        console.log(importer + " " + importee + " " + candidates[0] + " " + absolute + " " +importerAbsolute);
-      }
 
       if (candidates.length > 0) {
         //keep path relative, if importer is part of the same 'lib'

@@ -12,7 +12,7 @@
         "@angular/router": {},
         "rxjs": { "sourceMaps": true},
         "rxjs/operators": {"sourceMaps": true},
-        "app/common": {
+        "@app/common": {
             "entry": "app/common/index.js",
             "sourceMaps": true
         },
@@ -21,7 +21,7 @@
     },
     "format": "system",
     "importAlias": {
-        "app/common": "app/common"
+        "app/common": "@app/common"
     },
     "ngcOut": "out-tsc/app",
     "indexHtmlTemplate": "src/index.rollup.html", 
