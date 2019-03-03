@@ -52,9 +52,10 @@ export default libsModuleSpecifiers.map(ms => {
         server: buildConfig.dist,
         host: 'localhost',
         port: 5000,
-        //as long as https://github.com/BrowserSync/browser-sync/issues/1517 is not resolved, node's native http2 cannot be used
-        //and the installed http2 neither :-(
-        //httpModule: 'http2',
+        //As long as https://github.com/BrowserSync/browser-sync/issues/1517 is not resolved, node's native http2 cannot be used.
+        //Since 'http2' loads the native module, we use the relative path of the installed http2 module here.
+        //Importer is assumed to be at node_modules/browser-sync/dist/server.
+        //httpModule: '../../../http2',
         //https: {
         //  key: "./build/localhost.key",
         //  cert: "./build/localhost.crt"
@@ -69,6 +70,7 @@ export default libsModuleSpecifiers.map(ms => {
             next();
           },
           //See https://github.com/BrowserSync/browser-sync/issues/451
+          //Cannot be used together with http2 in browsersync (https://github.com/BrowserSync/browser-sync/issues/1443)
           compression()
         ]
       })
