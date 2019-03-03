@@ -12,27 +12,11 @@ import { browsersync } from './build/rollup-plugin-browsersync';
 export default libsModuleSpecifiers.map(ms => {
   return {
     input: rollupInput(ms),
-    output: isPolyfill(ms) ?
-      [
-        {
-          file: rollupOutput(ms),
-          format: "iife",
-          sourcemap: true
-        }
-      ] : [
-        // ES module version, for modern browsers
-        // {
-        //   file: "dist-rollup/modules/libs/" + p + ".js",
-        //   format: "esm",
-        //   sourcemap: true
-        // },
-        // SystemJS version, for older browsers
-        {
-          file: rollupOutput(ms),
-          format: "system",
-          sourcemap: true
-        }
-      ],
+    output: [{
+      file: rollupOutput(ms),
+      format: isPolyfill(ms) ? 'iife' : (buildConfig.format || 'system'),
+      sourcemap: true
+    }],
     plugins: [
       useLibSourceMaps(ms) && sourcemaps(),
       resolveRelativeLibImports,

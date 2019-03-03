@@ -19,6 +19,7 @@
         "dyn": { "entry": "app/dyn/dyn.module.js", "sourceMaps": true},
         "main": { "entry": "main.js", "sourceMaps": true}
     },
+    "format": "system",
     "importAlias": {
         "app/common": "app/common"
     },
