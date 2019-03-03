@@ -52,8 +52,13 @@ export default libsModuleSpecifiers.map(ms => {
         server: buildConfig.dist,
         host: 'localhost',
         port: 5000,
+        //as long as https://github.com/BrowserSync/browser-sync/issues/1517 is not resolved, node's native http2 cannot be used
+        //and the installed http2 neither :-(
         //httpModule: 'http2',
-        //https: true,
+        //https: {
+        //  key: "./build/localhost.key",
+        //  cert: "./build/localhost.crt"
+        //},
         middleware: [
           function (req, res, next) {
             //Cache fingerprinted resources 'forever'
