@@ -8,6 +8,7 @@ import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
 import { resolveRelativeLibImports, hashTemplateSuffix, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
+import compression from 'compression';
 
 export default libsModuleSpecifiers.map(ms => {
   return {
@@ -51,14 +52,18 @@ export default libsModuleSpecifiers.map(ms => {
         server: buildConfig.dist,
         host: 'localhost',
         port: 5000,
-        middleware: function (req, res, next) {
-          //Cache fingerprinted resources 'forever'
-          if (isFingerprinted(req.originalUrl)) {
-            res.setHeader('Cache-Control', 'max-age=31536000');
-          }
-          console.log(req.originalUrl);
-          next();
-        }
+        middleware: [
+          function (req, res, next) {
+            //Cache fingerprinted resources 'forever'
+            if (isFingerprinted(req.originalUrl)) {
+              res.setHeader('Cache-Control', 'max-age=31536000');
+            }
+            console.log(req.originalUrl);
+            next();
+          },
+          //See https://github.com/BrowserSync/browser-sync/issues/451
+          compression()
+        ]
       })
     ],
     //All other libs are externals to this lib
