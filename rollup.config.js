@@ -52,6 +52,8 @@ export default libsModuleSpecifiers.map(ms => {
         server: buildConfig.dist,
         host: 'localhost',
         port: 5000,
+        //httpModule: 'http2',
+        //https: true,
         middleware: [
           function (req, res, next) {
             //Cache fingerprinted resources 'forever'
