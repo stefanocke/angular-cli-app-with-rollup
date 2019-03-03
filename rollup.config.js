@@ -39,9 +39,10 @@ export default libsModuleSpecifiers.map(ms => {
           func: (templateStr, templateData) => compileDotTemplate(templateStr)(templateData),
           path: buildConfig.indexHtmlTemplate,
           data: {
-            //TODO: Support different polyfill bundles that are loaded conditionally based on browser version?
-            polyfillsPath: relativeLibPath('polyfills'),
-            importMap: JSON.stringify(libsImportMap())
+            // the following must be functions since (some of) the manfifests are written during the build
+            // but the plugin is configured earlier (when this rollup config is exported).
+            polyfillsPath: () => relativeLibPath('polyfills'),
+            importMap: () => JSON.stringify(libsImportMap())
           }
         }
       }),

@@ -12,10 +12,10 @@
 	<app-root></app-root>
 	
 	<script type="systemjs-importmap">
-		{{=it.importMap}}
+		{{=it.importMap()}}
 	</script>
 
-	<script src="{{=it.polyfillsPath}}"></script>
+	<script src="{{=it.polyfillsPath()}}"></script>
 	<script>
 			//pre-fetching libs. useful?
 			//Maybe. See https://developers.google.com/web/fundamentals/primers/modules , "Preload Modules"
