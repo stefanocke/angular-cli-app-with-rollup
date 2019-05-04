@@ -11,9 +11,9 @@ import { MyCommonModule } from '@app/common';
     MyCommonModule
   ],
   exports: [DynComponent],
-  entryComponents: [DynComponent],
   providers: []
 })
 export class DynModule { }
 
-//export { DynComponent };
+//Necessary to find the component dynamically
+export { DynComponent };

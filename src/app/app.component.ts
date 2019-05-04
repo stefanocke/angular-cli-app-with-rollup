@@ -18,24 +18,27 @@ export class AppComponent {
       const moduleType = m['DynModule'];
       const moduleFactory = new NgModuleFactory(moduleType);
       const moduleRef = moduleFactory.create(injector);
-      //Requires additional export statement for DynComponent.
-      //Does not work by selector.
+
+      //By type:
       //let componentType = m['DynComponent'];
-      let componentType = this.findComponentInModule(moduleType, 'dyn'); 
+      //By selector:
+      let componentType = this.findComponent(m, 'dyn'); 
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
       this.container.createComponent(componentFactory, 0, moduleRef.injector); 
     });
   }
 
   /**
-   * This uses the internal APIs ngComponentDef and ngModuleDef and may break!
+   * Finds the component by selector within the ES Module.
+   * For this, the component must be exported. 
+   * Formerly, we iterated over NgModule-Metadata to find the component. But they are subject to tree shaking (even the entry components !?!). 
+   * ngModuleDef is anyway an internal API, so better to avoid it...
+   * 
+   * This uses the internal API ngComponentDef and may break!
+   * Could by avoided by using type name instead.
    */
-  private findComponentInModule(moduleType: any, componentSelector: string): any {
-    return this.findComponent(moduleType.ngModuleDef.exports, componentSelector);
-  }
-
-  private findComponent(componentTypes: any[], componentSelector: string): any {
-    return componentTypes.find((c: any) => c.ngComponentDef.selectors[0][0] === componentSelector);
+  private findComponent(esModule: any, componentSelector: string): any {
+    return Object.values(esModule).find((t: any) => t.ngComponentDef && t.ngComponentDef.selectors[0][0] === componentSelector);
   }
 
 }

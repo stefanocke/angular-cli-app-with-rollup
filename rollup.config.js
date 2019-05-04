@@ -22,8 +22,6 @@ export default libsModuleSpecifiers.map(ms => {
       useLibSourceMaps(ms) && sourcemaps(),
       resolveRelativeLibImports,
       resolve({
-        jsnext: true,
-        main: true,
         browser: true
       }),
       needsCommonJS(ms) && commonjs({}),
