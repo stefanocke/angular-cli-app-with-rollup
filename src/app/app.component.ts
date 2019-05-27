@@ -10,7 +10,7 @@ declare var System: any;
 export class AppComponent {
   title = 'angular-cli-app-with-rollup';
 
-  @ViewChild('placeholder', { read: ViewContainerRef })
+  @ViewChild('placeholder', { read: ViewContainerRef, static: true })
   container: ViewContainerRef;
 
   constructor(private injector: Injector) {
