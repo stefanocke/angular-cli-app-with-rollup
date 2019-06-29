@@ -1,6 +1,6 @@
 # AngularCliAppWithRollup
 
-This project uses Angular 8.x or above.
+This project uses Angular 8.x or above with Ivy.
 
 ## Rollup Build
 
