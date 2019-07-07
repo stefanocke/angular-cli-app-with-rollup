@@ -38,7 +38,9 @@ export class AppComponent {
    * Could by avoided by using type name instead.
    */
   private findComponent(esModule: any, componentSelector: string): any {
-    return Object.values(esModule).find((t: any) => t.ngComponentDef && t.ngComponentDef.selectors[0][0] === componentSelector);
+    return Object.keys(esModule)
+      .map(k => esModule[k])
+      .find((t: any) => t.ngComponentDef && t.ngComponentDef.selectors[0][0] === componentSelector);
   }
 
 }
