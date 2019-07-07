@@ -16,7 +16,8 @@ export default libsModuleSpecifiers.map(ms => {
     output: [{
       file: rollupOutput(ms),
       format: isPolyfill(ms) ? 'iife' : (buildConfig.format || 'system'),
-      sourcemap: true
+      sourcemap: true,
+      strict: !isPolyfill(ms)
     }],
     plugins: [
       useLibSourceMaps(ms) && sourcemaps(),
