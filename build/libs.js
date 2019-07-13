@@ -39,17 +39,17 @@ export function rollupOutput(moduleSpecifier, suffix = 'js') {
   return buildConfig.dist + '/' + moduleSpecifier + '.' + suffix;
 }
 
-/**
- * Suffix template for hashed Files.
- */
-export const hashTemplateSuffix = '[hash:10].js';
+export function rollupOutputFileNamePattern(moduleSpecifier) {
+  return moduleSpecifier + (buildConfig.hash ? '.[hash]' : '') + '.js';
+}
+
 
 /**
- * Checks if the given URL pointe to a fingeprinted javascript bundle (lib or polyfills) or its source map.
+ * Checks if the given URL points to a fingeprinted javascript bundle (lib or polyfills) or its source map.
  * @param {string} url 
  */
 export function isFingerprinted(url) {
-  return !!url.match(/\.[a-z0-9]{10}\.js(?:\.map)?$/)
+  return !!url.match(/\.[a-z0-9]{8}\.js(?:\.map)?$/)
 }
 
 /**
@@ -109,14 +109,29 @@ export function libsImportMap() {
  * @returns the relative path
  */
 export function relativeLibPath(moduleSpecifier) {
-  var libPath = rollupOutput(moduleSpecifier);
-  //Read manifest and determine hashed file path
-  var manifestPath = rollupOutput(moduleSpecifier, manifestSuffix);
-  if (existsSync(manifestPath)) {
-    const manifest = JSON.parse(readFileSync(manifestPath));
-    libPath = manifest[libPath];
+  try {
+    var libPath;
+
+    //Read manifest and determine hashed file path
+    var manifestPath = rollupOutput(moduleSpecifier, manifestSuffix);
+    if (existsSync(manifestPath)) {
+      const manifest = JSON.parse(readFileSync(manifestPath));
+      // the key in the mainfest is the input file path
+      // the value is the path of the hashed bundle relative to dist dir 
+      libPath = manifest[rollupInput(moduleSpecifier)];
+      if(!libPath) {
+        throw Error('Path for '+rollupInput(moduleSpecifier) + ' not found in manifest ' + manifestPath);
+      }
+    } else {
+      libPath = path.relative(buildConfig.dist, rollupOutput(moduleSpecifier)).replace(/\\/g, '/');
+    }
+
+    console.log('relativeLibPath for ' + moduleSpecifier + ' is ' + libPath);
+    return libPath;
+  } catch (err) {
+    console.log('Error when determine relativeLibPath for ' + moduleSpecifier);
+    throw err;
   }
-  return path.relative(buildConfig.dist, libPath).replace(/\\/g, '/');
 }
 
 

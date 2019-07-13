@@ -1,23 +1,24 @@
 import { compile as compileDotTemplate } from 'dot';
 import commonjs from "rollup-plugin-commonjs";
-import hash from 'rollup-plugin-hash';
 import resolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { resolveRelativeLibImports, hashTemplateSuffix, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
+import { resolveRelativeLibImports, rollupOutputFileNamePattern, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
 import compression from 'compression';
+import entrypointHashmanifest from "./build/rollup-plugin-entrypoint-hashmanifest";
 
 export default libsModuleSpecifiers.map(ms => {
   return {
     input: rollupInput(ms),
     output: [{
-      file: rollupOutput(ms),
+      dir: buildConfig.dist,
       format: isPolyfill(ms) ? 'iife' : (buildConfig.format || 'system'),
       sourcemap: true,
-      strict: !isPolyfill(ms)
+      strict: !isPolyfill(ms),
+      entryFileNames: rollupOutputFileNamePattern(ms)
     }],
     plugins: [
       useLibSourceMaps(ms) && sourcemaps(),
@@ -27,10 +28,7 @@ export default libsModuleSpecifiers.map(ms => {
       }),
       needsCommonJS(ms) && commonjs({}),
       buildConfig.uglify && terser(),
-      buildConfig.hash && hash({
-        dest: rollupOutput(ms, hashTemplateSuffix),
-        manifest: rollupOutput(ms, manifestSuffix)
-      }),
+      buildConfig.hash && entrypointHashmanifest({manifestName: rollupOutput(ms, 'manifest.json')}),
       buildConfig.indexHtml && ms === 'main' && staticSite({
         dir: buildConfig.dist,
         template: {
