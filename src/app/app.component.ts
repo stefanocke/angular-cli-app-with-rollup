@@ -14,7 +14,9 @@ export class AppComponent {
   container: ViewContainerRef;
 
   constructor(private injector: Injector) {
-    System.import("/dyn.js").then(m => { 
+    // Here, "dyn" is resolved by the import map. 
+    // For a real plugin architecture, the mapping to the full bundle name would be driven by some metadata from the backend.
+    System.import("dyn").then(m => { 
       const moduleType = m['DynModule'];
       const moduleFactory = new NgModuleFactory(moduleType);
       const moduleRef = moduleFactory.create(injector);
