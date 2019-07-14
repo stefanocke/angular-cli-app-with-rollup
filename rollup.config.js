@@ -5,7 +5,7 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from 'rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { resolveRelativeLibImports, rollupOutputFileNamePattern, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, manifestSuffix, needsCommonJS, relativeLibPath, rollupInput, rollupOutput, useLibSourceMaps } from './build/libs.js';
+import { resolveRelativeLibImports, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, needsCommonJS, relativeLibPath, rollupInput, useLibSourceMaps } from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
 import compression from 'compression';
 import entrypointHashmanifest from "./build/rollup-plugin-entrypoint-hashmanifest";
@@ -13,13 +13,22 @@ import entrypointHashmanifest from "./build/rollup-plugin-entrypoint-hashmanifes
 export default libsModuleSpecifiers.map(ms => {
   return {
     input: rollupInput(ms),
-    output: [{
-      dir: buildConfig.dist,
-      format: isPolyfill(ms) ? 'iife' : (buildConfig.format || 'system'),
-      sourcemap: true,
-      strict: !isPolyfill(ms),
-      entryFileNames: rollupOutputFileNamePattern(ms)
-    }],
+    output: isPolyfill(ms) ?
+      {
+        dir: buildConfig.dist,
+        format: 'iife',
+        sourcemap: true,
+        strict: false,
+        entryFileNames: buildConfig.hash ? ms + '.[hash].js' : ms + '.js'
+      } :
+      buildConfig.formats.map(f => {
+        return {
+          dir: buildConfig.dist,
+          format: f,
+          sourcemap: true,
+          entryFileNames:buildConfig.hash ? ms + '.[format].[hash].js' : ms + '.[format].js'
+        };
+      }),
     plugins: [
       useLibSourceMaps(ms) && sourcemaps(),
       resolveRelativeLibImports,
@@ -28,7 +37,7 @@ export default libsModuleSpecifiers.map(ms => {
       }),
       needsCommonJS(ms) && commonjs({}),
       buildConfig.uglify && terser(),
-      buildConfig.hash && entrypointHashmanifest({manifestName: rollupOutput(ms, 'manifest.json')}),
+      buildConfig.hash && entrypointHashmanifest({ manifestName: buildConfig.dist + '/' + ms + (isPolyfill(ms) ? '.manifest.json' : '.[format].manifest.json') }),
       buildConfig.indexHtml && ms === 'main' && staticSite({
         dir: buildConfig.dist,
         template: {

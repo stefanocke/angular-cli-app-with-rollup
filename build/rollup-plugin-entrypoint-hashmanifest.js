@@ -12,12 +12,8 @@
  */
 const fse = require('fs-extra');
 
-const defaults = {
-  manifestName: "entrypoint.hashmanifest.json"
-};
 
 export default function(opts = {}) {
-  opts = Object.assign({}, defaults, opts);
   let inputs;
   return {
     name: "entrypoint-hashmanifest",
@@ -30,11 +26,13 @@ export default function(opts = {}) {
         inputs = Object.values(inputs);
       }
     },
-    generateBundle(_outputOptions, bundle) {
+    generateBundle(outputOptions, bundle) {
       let map = {};
       return Promise.all(inputs.map(id => this.resolveId(id))).then(
         resolvedInputs => {
+            console.log("resolvedInputs: "+resolvedInputs);
           for (const key of Object.keys(bundle)) {
+            console.log("bundle: "+key);
             const idx = resolvedInputs.findIndex(
               input => input in (bundle[key].modules || {})
             );
@@ -42,7 +40,11 @@ export default function(opts = {}) {
               map[inputs[idx]] = bundle[key].fileName;
             }
           }
-          fse.outputFileSync(opts.manifestName, JSON.stringify(map, null, "  "));
+
+          //https://github.com/rollup/rollup/pull/2102#issuecomment-511199159
+          const format = outputOptions.format === 'es' ? 'esm' : outputOptions.format;
+          const manifestFile = opts.manifestName.replace('[format]', format)
+          fse.outputFileSync(manifestFile, JSON.stringify(map, null, "  "));
         }
       );
     }

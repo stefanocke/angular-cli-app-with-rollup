@@ -35,12 +35,8 @@ export function useLibSourceMaps(moduleSpecifier) {
  * @param {string} moduleSpecifier the module specifier for the lib
  * @param {string} suffix the suffix. default is 'js'
  */
-export function rollupOutput(moduleSpecifier, suffix = 'js') {
-  return buildConfig.dist + '/' + moduleSpecifier + '.' + suffix;
-}
-
-export function rollupOutputFileNamePattern(moduleSpecifier) {
-  return moduleSpecifier + (buildConfig.hash ? '.[hash]' : '') + '.js';
+export function rollupOutput(moduleSpecifier, format, suffix = 'js') {
+  return buildConfig.dist + '/' + moduleSpecifier + (format ? '.' + format : '') + '.' + suffix;
 }
 
 
@@ -51,11 +47,6 @@ export function rollupOutputFileNamePattern(moduleSpecifier) {
 export function isFingerprinted(url) {
   return !!url.match(/\.[a-z0-9]{8}\.js(?:\.map)?$/)
 }
-
-/**
- * Suffix for manifest file for hashed files.
- */
-export const manifestSuffix = 'manifest.json';
 
 /**
  * Checks if a module identified by the specifier is a lib.
@@ -97,7 +88,7 @@ export function libsImportMap() {
   libsModuleSpecifiers
     .filter(ms => !isPolyfill(ms))
     .forEach(ms => {
-      imports[ms] = relativeLibPath(ms);
+      imports[ms] = relativeLibPath(ms, 'system');
     })
   return { imports }
 }
@@ -106,14 +97,15 @@ export function libsImportMap() {
  * Detemines the path of a lib or polyfill bundle relative to index.html. If a fingerprinted version exists, that one is used.
  * 
  * @param {string} moduleSpecifier the module specifier for the lib or polyfill
+ * @param {string} format the bundle format (esm, system). Null, if the bundle exists only in one format
  * @returns the relative path
  */
-export function relativeLibPath(moduleSpecifier) {
+export function relativeLibPath(moduleSpecifier, format = null) {
   try {
     var libPath;
 
     //Read manifest and determine hashed file path
-    var manifestPath = rollupOutput(moduleSpecifier, manifestSuffix);
+    var manifestPath = rollupOutput(moduleSpecifier, format, 'manifest.json');
     if (existsSync(manifestPath)) {
       const manifest = JSON.parse(readFileSync(manifestPath));
       // the key in the mainfest is the input file path
@@ -123,7 +115,7 @@ export function relativeLibPath(moduleSpecifier) {
         throw Error('Path for '+rollupInput(moduleSpecifier) + ' not found in manifest ' + manifestPath);
       }
     } else {
-      libPath = path.relative(buildConfig.dist, rollupOutput(moduleSpecifier)).replace(/\\/g, '/');
+      libPath = path.relative(buildConfig.dist, rollupOutput(moduleSpecifier, format)).replace(/\\/g, '/');
     }
 
     console.log('relativeLibPath for ' + moduleSpecifier + ' is ' + libPath);
