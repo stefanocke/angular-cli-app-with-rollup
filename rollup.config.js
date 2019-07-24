@@ -2,7 +2,7 @@ import { compile as compileDotTemplate } from 'dot';
 import commonjs from "rollup-plugin-commonjs";
 import resolve from 'rollup-plugin-node-resolve';
 import sourcemaps from 'rollup-plugin-sourcemaps';
-import staticSite from 'rollup-plugin-static-site';
+import staticSite from './build/rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
 import { resolveRelativeLibImports, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, needsCommonJS, relativeLibPath, rollupInput, useLibSourceMaps } from './build/libs.js';
