@@ -20,24 +20,24 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "8.0.3",
-    "@angular/common": "8.0.3",
-    "@angular/compiler": "8.0.3",
-    "@angular/core": "8.0.3",
-    "@angular/forms": "8.0.3",
-    "@angular/platform-browser": "8.0.3",
-    "@angular/router": "8.0.3",
+    "@angular/animations": "8.1.2",
+    "@angular/common": "8.1.2",
+    "@angular/compiler": "8.1.2",
+    "@angular/core": "8.1.2",
+    "@angular/forms": "8.1.2",
+    "@angular/platform-browser": "8.1.2",
+    "@angular/router": "8.1.2",
     "core-js": "~2.6.5",
     "rxjs": "~6.5.2",
     "systemjs": "~4.0.1",
-    "tslib": "~1.9.3",
+    "tslib": "~1.10.0",
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.801.0",
-    "@angular/cli": "8.0.6",
-    "@angular/compiler-cli": "8.0.3",
-    "@angular/language-service": "8.0.3",
+    "@angular-devkit/build-angular": "^0.801.2",
+    "@angular/cli": "8.1.2",
+    "@angular/compiler-cli": "8.1.2",
+    "@angular/language-service": "8.1.2",
     "@types/jasmine": "~2.8.8",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
@@ -64,8 +64,8 @@
     "rollup-plugin-static-site": "~0.1.0",
     "rollup-plugin-terser": "~5.1.1",
     "strip-json-comments": "^2.0.1",
-    "ts-node": "~8.1.0",
-    "tslint": "~5.16.0",
-    "typescript": "~3.4.5"
+    "ts-node": "~8.3.0",
+    "tslint": "~5.18.0",
+    "typescript": "~3.5.3"
   }
 }
