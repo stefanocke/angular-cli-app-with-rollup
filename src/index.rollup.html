@@ -17,7 +17,17 @@
 	</script>
 
 	<script type="module-shim">
-		import * as m from "main";
+		//pre-fetching libs. useful?
+		//Maybe. See https://developers.google.com/web/fundamentals/primers/modules , "Preload Modules"
+		import '@angular/core';
+		import '@angular/common';
+		import '@angular/platform-browser';
+		import 'rxjs';
+		import 'rxjs/operators';
+		import '@app/common';
+
+		//Load Application
+		import 'main';
 	</script>
 	
 	<script type="systemjs-importmap" nomodule>
