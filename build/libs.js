@@ -83,12 +83,12 @@ export function needsCommonJS(moduleSpecifier) {
  * See https://github.com/systemjs/systemjs/blob/master/docs/import-maps.md.
  * For hashed files, the manifests are used to get the path.
  */
-export function libsImportMap() {
+export function libsImportMap(format = 'system') {
   const imports = {};
   libsModuleSpecifiers
     .filter(ms => !isPolyfill(ms))
     .forEach(ms => {
-      imports[ms] = relativeLibPath(ms, 'system');
+      imports[ms] = relativeLibPath(ms, format);
     })
   return { imports }
 }

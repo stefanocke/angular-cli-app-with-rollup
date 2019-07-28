@@ -14,9 +14,15 @@ export class AppComponent {
   container: ViewContainerRef;
 
   constructor(private injector: Injector) {
+
+    const moduleName = 'dyn';
+
+    const module$ = typeof System !== "undefined" ? System.import(moduleName) : import(moduleName);
+
+
     // Here, "dyn" is resolved by the import map. 
     // For a real plugin architecture, the mapping to the full bundle name would be driven by some metadata from the backend.
-    System.import("dyn").then(m => { 
+    module$.then(m => {
       const moduleType = m['DynModule'];
       const moduleFactory = new NgModuleFactory(moduleType);
       const moduleRef = moduleFactory.create(injector);
@@ -24,10 +30,11 @@ export class AppComponent {
       //By type:
       //let componentType = m['DynComponent'];
       //By selector:
-      let componentType = this.findComponent(m, 'dyn'); 
+      let componentType = this.findComponent(m, 'dyn');
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
-      this.container.createComponent(componentFactory, 0, moduleRef.injector); 
+      this.container.createComponent(componentFactory, 0, moduleRef.injector);
     });
+
   }
 
   /**

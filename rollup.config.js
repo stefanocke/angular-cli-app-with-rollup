@@ -9,6 +9,7 @@ import { resolveRelativeLibImports, isFingerprinted, isLib, isPolyfill, libsImpo
 import { browsersync } from './build/rollup-plugin-browsersync';
 import compression from 'compression';
 import entrypointHashmanifest from "./build/rollup-plugin-entrypoint-hashmanifest";
+import babel from 'rollup-plugin-babel';
 
 export default libsModuleSpecifiers.map(ms => {
   return {
@@ -30,6 +31,15 @@ export default libsModuleSpecifiers.map(ms => {
         };
       }),
     plugins: [
+      babel({
+        exclude: 'node_modules/**',
+        //TODO: Different config for systemjs (older browsers, 'full' transpilation ) and esm (newer browsers, less or no transpilation)
+        presets: [
+          [
+            "@babel/preset-env"
+          ]
+        ]
+      }),
       useLibSourceMaps(ms) && sourcemaps(),
       resolveRelativeLibImports,
       resolve({
@@ -49,7 +59,8 @@ export default libsModuleSpecifiers.map(ms => {
             // the following must be functions since (some of) the manfifests are written during the build
             // but the plugin is configured earlier (when this rollup config is exported).
             polyfillsPath: () => relativeLibPath('polyfills'),
-            importMap: () => JSON.stringify(libsImportMap())
+            polyfillsEsmPath: () => relativeLibPath('polyfills.esm'),
+            importMap: (format) => JSON.stringify(libsImportMap(format))
           }
         }
       }),

@@ -10,13 +10,22 @@
 </head>
 <body>
 	<app-root></app-root>
-	
-	<script type="systemjs-importmap">
-		{{=it.importMap()}}
+
+	<script defer src="{{=it.polyfillsEsmPath()}}" type="module"></script>
+	<script type="importmap-shim">
+		{{=it.importMap('esm')}}
 	</script>
 
-	<script src="{{=it.polyfillsPath()}}"></script>
-	<script>
+	<script type="module-shim">
+		import * as m from "main";
+	</script>
+	
+	<script type="systemjs-importmap" nomodule>
+		{{=it.importMap('system')}}
+	</script>
+
+	<script src="{{=it.polyfillsPath()}}" nomodule></script>
+	<script nomodule>
 			//pre-fetching libs. useful?
 			//Maybe. See https://developers.google.com/web/fundamentals/primers/modules , "Preload Modules"
 			System.import('@angular/core');

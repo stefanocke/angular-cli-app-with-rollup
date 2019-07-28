@@ -5,6 +5,11 @@
             "polyfill": true,
             "needsCommonJS": true
         },
+        "polyfills.esm": {
+            "entry": "polyfills.esm.js",
+            "polyfill": true,
+            "needsCommonJS": true
+        },
         "@angular/core": {},
         "@angular/common": {},
         "@angular/platform-browser": {},
