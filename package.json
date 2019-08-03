@@ -29,7 +29,7 @@
     "@angular/router": "8.2.0",
     "core-js": "~2.6.5",
     "rxjs": "~6.5.2",
-    "systemjs": "~4.0.1",
+    "systemjs": "~5.0.0",
     "tslib": "~1.10.0",
     "zone.js": "~0.9.1"
   },
