@@ -21,17 +21,17 @@ export function rollupInput(moduleSpecifier) {
 }
 
 /**
- * Whether to use the source maps provided by the lib. For libs compiled from typescript this is generally advisable. 
+ * Whether to use the source maps provided by the lib. For libs compiled from typescript this is generally advisable.
  * For angular itself it does currently not work, likely due to the modifications applied by ivy-ngcc (or due to some outdated rollup-sourcemaps plugin?).
- * 
- * @param {string} moduleSpecifier 
+ *
+ * @param {string} moduleSpecifier
  * @returns {boolean} true if sourceMaps of teh lib shall be used
  */
 export function useLibSourceMaps(moduleSpecifier) {
   return libs[moduleSpecifier].sourceMaps;
 }
 
-/** 
+/**
  * @param {string} moduleSpecifier the module specifier for the lib
  * @param {string} suffix the suffix. default is 'js'
  */
@@ -42,7 +42,7 @@ export function rollupOutput(moduleSpecifier, format, suffix = 'js') {
 
 /**
  * Checks if the given URL points to a fingeprinted javascript bundle (lib or polyfills) or its source map.
- * @param {string} url 
+ * @param {string} url
  */
 export function isFingerprinted(url) {
   return !!url.match(/\.[a-z0-9]{8}\.js(?:\.map)?$/)
@@ -50,8 +50,8 @@ export function isFingerprinted(url) {
 
 /**
  * Checks if a module identified by the specifier is a lib.
- * 
- * @param {string} moduleSpecifier 
+ *
+ * @param {string} moduleSpecifier
  * @returns true, if lib
  */
 export function isLib(moduleSpecifier) {
@@ -60,8 +60,8 @@ export function isLib(moduleSpecifier) {
 
 /**
  * Checks if a module identified by the specifier is a polyfill (or multiple).
- * 
- * @param {string} moduleSpecifier 
+ *
+ * @param {string} moduleSpecifier
  * @returns true, if polyfill
  */
 export function isPolyfill(moduleSpecifier) {
@@ -70,8 +70,8 @@ export function isPolyfill(moduleSpecifier) {
 
 /**
  * Checks if a module identified by the specifier needs CommonJS resolver (for "require").
- * 
- * @param {string} moduleSpecifier 
+ *
+ * @param {string} moduleSpecifier
  * @returns true, if needs commonJs resolver
  */
 export function needsCommonJS(moduleSpecifier) {
@@ -89,13 +89,13 @@ export function libsImportMap() {
     .filter(ms => !isPolyfill(ms))
     .forEach(ms => {
       imports[ms] = relativeLibPath(ms, 'system');
-    })
+    });
   return { imports }
 }
 
 /**
  * Detemines the path of a lib or polyfill bundle relative to index.html. If a fingerprinted version exists, that one is used.
- * 
+ *
  * @param {string} moduleSpecifier the module specifier for the lib or polyfill
  * @param {string} format the bundle format (esm, system). Null, if the bundle exists only in one format
  * @returns the relative path
@@ -109,8 +109,8 @@ export function relativeLibPath(moduleSpecifier, format = null) {
     if (existsSync(manifestPath)) {
       const manifest = JSON.parse(readFileSync(manifestPath));
       // the key in the mainfest is the input file path
-      // the value is the path of the hashed bundle relative to dist dir 
-      libPath = manifest[rollupInput(moduleSpecifier)];
+      // the value is the path of the hashed bundle relative to dist dir
+      libPath = './' + manifest[rollupInput(moduleSpecifier)];
       if(!libPath) {
         throw Error('Path for '+rollupInput(moduleSpecifier) + ' not found in manifest ' + manifestPath);
       }
@@ -149,5 +149,5 @@ export const resolveRelativeLibImports = {
     }
     return undefined;
   }
-}
+};
 

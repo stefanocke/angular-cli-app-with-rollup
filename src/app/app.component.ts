@@ -1,4 +1,4 @@
-import { Component, ɵNgModuleFactory as NgModuleFactory, Injector, NgModule, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ɵNgModuleFactory as NgModuleFactory, Injector, ViewChild, ViewContainerRef } from '@angular/core';
 
 declare var System: any;
 
@@ -14,9 +14,9 @@ export class AppComponent {
   container: ViewContainerRef;
 
   constructor(private injector: Injector) {
-    // Here, "dyn" is resolved by the import map. 
+    // Here, "dyn" is resolved by the import map.
     // For a real plugin architecture, the mapping to the full bundle name would be driven by some metadata from the backend.
-    System.import("dyn").then(m => { 
+    System.import("dyn").then(m => {
       const moduleType = m['DynModule'];
       const moduleFactory = new NgModuleFactory(moduleType);
       const moduleRef = moduleFactory.create(injector);
@@ -24,25 +24,25 @@ export class AppComponent {
       //By type:
       //let componentType = m['DynComponent'];
       //By selector:
-      let componentType = this.findComponent(m, 'dyn'); 
+      let componentType = this.findComponent(m, 'dyn');
       let componentFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(componentType);
-      this.container.createComponent(componentFactory, 0, moduleRef.injector); 
+      this.container.createComponent(componentFactory, 0, moduleRef.injector);
     });
   }
 
   /**
    * Finds the component by selector within the ES Module.
-   * For this, the component must be exported. 
-   * Formerly, we iterated over NgModule-Metadata to find the component. But they are subject to tree shaking (even the entry components !?!). 
+   * For this, the component must be exported.
+   * Formerly, we iterated over NgModule-Metadata to find the component. But they are subject to tree shaking (even the entry components !?!).
    * ngModuleDef is anyway an internal API, so better to avoid it...
-   * 
+   *
    * This uses the internal API ngComponentDef and may break!
    * Could by avoided by using type name instead.
    */
   private findComponent(esModule: any, componentSelector: string): any {
     return Object.keys(esModule)
       .map(k => esModule[k])
-      .find((t: any) => t.ngComponentDef && t.ngComponentDef.selectors[0][0] === componentSelector);
+      .find((t: any) => t.ɵcmp && t.ɵcmp.selectors[0][0] === componentSelector);
   }
 
 }
