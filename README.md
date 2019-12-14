@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/stefanocke/angular-cli-app-with-rollup/tree/master.svg?style=shield)](https://circleci.com/gh/stefanocke/angular-cli-app-with-rollup/tree/master)
+
 # AngularCliAppWithRollup
 
 This project uses Angular 9.x or above with Ivy.
