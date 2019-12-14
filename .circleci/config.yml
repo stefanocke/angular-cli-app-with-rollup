@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/angular-cli-app-with-rollup
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: angular-cli-app-with-rollup-{{ .Branch }}-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          key: angular-cli-app-with-rollup-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - "node_modules"
+      - run: xvfb-run -a npm run rollup-prod
