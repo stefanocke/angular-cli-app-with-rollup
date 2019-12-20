@@ -2,11 +2,11 @@ import { Component } from '@angular/core';
 import { DynService } from './dyn.service';
 
 @Component({
-  selector: 'dyn',
-  templateUrl: './dyn.component.html',
-  styleUrls: ['./dyn.component.css']
+  selector: 'dyn2',
+  templateUrl: './dyn.component2.html',
+  styleUrls: ['./dyn.component2.css']
 })
-export class DynComponent {
+export class DynComponent2 {
   constructor(public dynService: DynService) {
 
   }
