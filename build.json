@@ -10,34 +10,51 @@
         "@angular/platform-browser": {},
         "@angular/forms": {},
         "@angular/router": {},
-        "rxjs": { "sourceMaps": true},
-        "rxjs/operators": {"sourceMaps": true},
+        "rxjs": {
+            "sourceMaps": true
+        },
+        "rxjs/operators": {
+            "sourceMaps": true
+        },
         "@app/common": {
             "entry": "app/common/index.js",
             "sourceMaps": true
         },
-        "dyn": { "entry": "app/dyn/dyn.module.js", "sourceMaps": true},
-        "main": { "entry": "main.js", "sourceMaps": true}
+        "dyn": {
+            "entry": "app/dyn/dyn.module.js",
+            "sourceMaps": true
+        },
+        "dyn2": {
+            "entry": "app/dyn2/dyn2.module.js",
+            "sourceMaps": true
+        },
+        "main": {
+            "entry": "main.js",
+            "sourceMaps": true
+        }
     },
-    "formats": ["system", "esm"],
+    "formats": [
+        "system",
+        "esm"
+    ],
     "importAlias": {
         "app/common": "@app/common"
     },
     "ngcOut": "out-tsc/app/src",
-    "indexHtmlTemplate": "src/index.rollup.html", 
+    "indexHtmlTemplate": "src/index.rollup.html",
     "env": {
-        "dev" : {
+        "dev": {
             "dist": "dist-rollup",
             "uglify": false,
             "hash": true,
             "indexHtml": true,
-            "serve": true      
+            "serve": true
         },
-        "prod" : {
+        "prod": {
             "dist": "dist-rollup-prod",
             "uglify": true,
             "hash": true,
             "indexHtml": true
-        } 
+        }
     }
 }
