@@ -12,21 +12,21 @@ import entrypointHashmanifest from "./build/rollup-plugin-entrypoint-hashmanifes
 
 export default libsModuleSpecifiers.map(ms => {
   return {
-    input: rollupInput(ms),
+    input: {[ms]: rollupInput(ms)},
     output: isPolyfill(ms) ?
       {
         dir: buildConfig.dist,
         format: 'iife',
         sourcemap: true,
         strict: false,
-        entryFileNames: buildConfig.hash ? ms + '.[hash].js' : ms + '.js'
+        entryFileNames: buildConfig.hash ? '[name].[hash].js' : '[name].js'
       } :
       buildConfig.formats.map(f => {
         return {
           dir: buildConfig.dist,
           format: f,
           sourcemap: true,
-          entryFileNames:buildConfig.hash ? ms + '.[format].[hash].js' : ms + '.[format].js'
+          entryFileNames:buildConfig.hash ? '[name].[format].[hash].js' : '[name].[format].js'
         };
       }),
     plugins: [
@@ -37,7 +37,7 @@ export default libsModuleSpecifiers.map(ms => {
       }),
       needsCommonJS(ms) && commonjs({}),
       buildConfig.uglify && terser(),
-      buildConfig.hash && entrypointHashmanifest({ manifestName: buildConfig.dist + '/' + ms + (isPolyfill(ms) ? '.manifest.json' : '.[format].manifest.json') }),
+      buildConfig.hash && entrypointHashmanifest({ manifestName: buildConfig.dist + '/' + ms +  (isPolyfill(ms) ? '.manifest.json' : '.[format].manifest.json') }),
       buildConfig.indexHtml && ms === 'main' && staticSite({
         dir: buildConfig.dist,
         template: {
@@ -82,6 +82,7 @@ export default libsModuleSpecifiers.map(ms => {
       })
     ],
     //All other libs are externals to this lib
+    //TODO: support for multiple inputs?
     external: otherMs => otherMs !== ms && isLib(otherMs)
   }
 });
