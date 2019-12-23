@@ -17,7 +17,7 @@ import { DynService } from './dyn.service';
   exports: [DynComponent],
   providers: [DynService]
 })
-export class DynModule { }
+export class Dyn1Module { }
 
 //Necessary to find the component dynamically
 export { DynComponent, DynComponent2 };

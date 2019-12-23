@@ -20,11 +20,11 @@ export class AppComponent {
 
     // Here, des ES module is resolved by the import map.
     // For a real plugin architecture, the mapping to the full bundle name would be driven by some metadata from the backend.
-    this.loadComponent('dyn', 'DynModule', 'dyn', injector)
+    this.loadComponent('dyn1', 'Dyn1Module', 'dyn', injector)
       .then(({ componentFactory, injector }) => {
         this.container1.createComponent(componentFactory, 0, injector);
       });
-    this.loadComponent('dyn', 'DynModule', 'dyn2', injector)
+    this.loadComponent('dyn1', 'Dyn1Module', 'dyn2', injector)
       .then(({ componentFactory, injector }) => {
         this.container2.createComponent(componentFactory, 0, injector);
       });
