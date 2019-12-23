@@ -20,12 +20,11 @@
             "entry": "app/common/index.js",
             "sourceMaps": true
         },
-        "dyn1": {
-            "entry": "app/dyn1/dyn1.module.js",
-            "sourceMaps": true
-        },
-        "dyn2": {
-            "entry": "app/dyn2/dyn2.module.js",
+        "dyn": {
+            "entry": {
+                "dyn1": "app/dyn1/dyn1.module.js",
+                "dyn2": "app/dyn2/dyn2.module.js"
+            },
             "sourceMaps": true
         },
         "main": {

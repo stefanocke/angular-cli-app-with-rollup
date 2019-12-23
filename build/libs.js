@@ -12,13 +12,27 @@ const importAlias = buildConfig.importAlias;
 
 export const libsModuleSpecifiers = Object.keys(libs);
 
-/**
- * @param {string} moduleSpecifier the module specifier for the lib
- * @returns the input for bundeling the lib
- */
-export function rollupInput(moduleSpecifier) {
-  return libs[moduleSpecifier].entry && buildConfig.ngcOut + '/' + libs[moduleSpecifier].entry || moduleSpecifier;
+export function rollupInput(moduleSpecifier, entry) {
+  return entry && buildConfig.ngcOut + '/' + entry || moduleSpecifier;
 }
+
+export function rollupInputs(moduleSpecifierOrAppPluginName) {
+  const spec = libs[moduleSpecifierOrAppPluginName];
+  if(!spec.entry || typeof spec.entry === 'string') {
+    //A "lib" has a single entry point and thus a single input
+    const ms = moduleSpecifierOrAppPluginName;
+    return  {[ms]: rollupInput(ms, spec.entry)};
+  } else {
+    //An application plugin can have multiple entry points resulting in multiple inputs.
+    //They may share some code by regular rollup code-splitting.
+    const inputs = {};
+    Object.keys(spec.entry).forEach(ms => {
+      inputs[ms] = rollupInput(ms, spec.entry[ms]);
+    });
+    return inputs;
+  }
+ 
+} 
 
 /**
  * Whether to use the source maps provided by the lib. For libs compiled from typescript this is generally advisable.
@@ -86,9 +100,16 @@ export function needsCommonJS(moduleSpecifier) {
 export function libsImportMap() {
   const imports = {};
   libsModuleSpecifiers
-    .filter(ms => !isPolyfill(ms))
-    .forEach(ms => {
-      imports[ms] = relativeLibPath(ms, 'system');
+    .filter(msOrPluginName => !isPolyfill(msOrPluginName))
+    .forEach(msOrPluginName => {
+      const spec = libs[msOrPluginName];
+      if(!spec.entry || typeof spec.entry === 'string') {
+        imports[msOrPluginName] = relativeLibPath(msOrPluginName, spec.entry, 'system');
+      } else {
+        Object.keys(spec.entry).forEach(ms => {
+          imports[ms] = relativeLibPath(ms, spec.entry[ms], 'system', msOrPluginName);
+        });
+      }
     });
   return { imports }
 }
@@ -100,20 +121,21 @@ export function libsImportMap() {
  * @param {string} format the bundle format (esm, system). Null, if the bundle exists only in one format
  * @returns the relative path
  */
-export function relativeLibPath(moduleSpecifier, format = null) {
+export function relativeLibPath(moduleSpecifier, entry = null, format = null, msOrPluginName = null) {
   try {
     var libPath;
 
     //Read manifest and determine hashed file path
-    var manifestPath = rollupOutput(moduleSpecifier, format, 'manifest.json');
+    var manifestPath = rollupOutput(msOrPluginName || moduleSpecifier, format, 'manifest.json');
     if (existsSync(manifestPath)) {
       const manifest = JSON.parse(readFileSync(manifestPath));
       // the key in the mainfest is the input file path
       // the value is the path of the hashed bundle relative to dist dir
-      libPath = './' + manifest[rollupInput(moduleSpecifier)];
+      libPath = manifest[rollupInput(moduleSpecifier, entry)];
       if(!libPath) {
-        throw Error('Path for '+rollupInput(moduleSpecifier) + ' not found in manifest ' + manifestPath);
+        throw Error('Path for '+ moduleSpecifier + ' (' + rollupInput(moduleSpecifier, entry) +') not found in manifest ' + manifestPath);
       }
+      libPath = './' + libPath;
     } else {
       libPath = path.relative(buildConfig.dist, rollupOutput(moduleSpecifier, format)).replace(/\\/g, '/');
     }

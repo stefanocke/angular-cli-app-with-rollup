@@ -5,14 +5,14 @@ import sourcemaps from 'rollup-plugin-sourcemaps';
 import staticSite from './build/rollup-plugin-static-site';
 import { terser } from "rollup-plugin-terser";
 import { buildConfig } from './build/config';
-import { resolveRelativeLibImports, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, needsCommonJS, relativeLibPath, rollupInput, useLibSourceMaps } from './build/libs.js';
+import { resolveRelativeLibImports, isFingerprinted, isLib, isPolyfill, libsImportMap, libsModuleSpecifiers, needsCommonJS, relativeLibPath, rollupInputs, useLibSourceMaps } from './build/libs.js';
 import { browsersync } from './build/rollup-plugin-browsersync';
 import compression from 'compression';
 import entrypointHashmanifest from "./build/rollup-plugin-entrypoint-hashmanifest";
 
 export default libsModuleSpecifiers.map(ms => {
   return {
-    input: {[ms]: rollupInput(ms)},
+    input: rollupInputs(ms),
     output: isPolyfill(ms) ?
       {
         dir: buildConfig.dist,
@@ -26,7 +26,8 @@ export default libsModuleSpecifiers.map(ms => {
           dir: buildConfig.dist,
           format: f,
           sourcemap: true,
-          entryFileNames:buildConfig.hash ? '[name].[format].[hash].js' : '[name].[format].js'
+          entryFileNames:buildConfig.hash ? '[name].[format].[hash].js' : '[name].[format].js',
+          chunkFileNames: '[name].[format].[hash].js'
         };
       }),
     plugins: [
@@ -48,7 +49,7 @@ export default libsModuleSpecifiers.map(ms => {
           data: {
             // the following must be functions since (some of) the manfifests are written during the build
             // but the plugin is configured earlier (when this rollup config is exported).
-            polyfillsPath: () => relativeLibPath('polyfills'),
+            polyfillsPath: () => relativeLibPath('polyfills', 'polyfills.js'),
             importMap: () => JSON.stringify(libsImportMap())
           }
         }
