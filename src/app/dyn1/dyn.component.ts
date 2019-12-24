@@ -3,8 +3,7 @@ import { DynService } from './dyn.service';
 
 @Component({
   selector: 'dyn',
-  templateUrl: './dyn.component.html',
-  styleUrls: ['./dyn.component.css']
+  templateUrl: './dyn.component.html'
 })
 export class DynComponent {
   constructor(public dynService: DynService) {

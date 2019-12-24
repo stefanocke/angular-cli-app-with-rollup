@@ -3,10 +3,9 @@ import { DynService } from './dyn.service';
 
 @Component({
   selector: 'dyn2',
-  templateUrl: './dyn.component2.html',
-  styleUrls: ['./dyn.component2.css']
+  templateUrl: './dyn2.component.html'
 })
-export class DynComponent2 {
+export class Dyn2Component {
   constructor(public dynService: DynService) {
 
   }

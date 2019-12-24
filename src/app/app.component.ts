@@ -16,6 +16,9 @@ export class AppComponent {
   @ViewChild('placeholder2', { read: ViewContainerRef, static: true })
   container2: ViewContainerRef;
 
+  @ViewChild('placeholder3', { read: ViewContainerRef, static: true })
+  container3: ViewContainerRef;
+
   constructor(private injector: Injector) {
 
     // Here, des ES module is resolved by the import map.
@@ -27,6 +30,10 @@ export class AppComponent {
     this.loadComponent('dyn1', 'Dyn1Module', 'dyn2', injector)
       .then(({ componentFactory, injector }) => {
         this.container2.createComponent(componentFactory, 0, injector);
+      });
+    this.loadComponent('dyn2', 'Dyn2Module', 'dyn3', injector)
+      .then(({ componentFactory, injector }) => {
+        this.container3.createComponent(componentFactory, 0, injector);
       });
   }
 
@@ -65,7 +72,7 @@ export class AppComponent {
    * Formerly, we iterated over NgModule-Metadata to find the component. But they are subject to tree shaking (even the entry components !?!).
    * ngModuleDef is anyway an internal API, so better to avoid it...
    *
-   * This uses the internal API ngComponentDef and may break!
+   * This uses the internal API ɵcmp and may break!
    * Could by avoided by using type name instead.
    */
   private findComponent(esModule: any, componentSelector: string): any {

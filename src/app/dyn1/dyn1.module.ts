@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { MyCommonModule } from '@app/common';
 import { DynCommonModule } from '../dyn-common/dyn-common.module';
 import { DynComponent } from './dyn.component';
-import { DynComponent2 } from './dyn.component2';
+import { Dyn2Component } from './dyn2.component';
 import { DynService } from './dyn.service';
 
 
 @NgModule({
   declarations: [
     DynComponent,
-    DynComponent2
+    Dyn2Component
   ],
   imports: [
     MyCommonModule, DynCommonModule
@@ -20,5 +20,5 @@ import { DynService } from './dyn.service';
 export class Dyn1Module { }
 
 //Necessary to find the component dynamically
-export { DynComponent, DynComponent2 };
+export { DynComponent, Dyn2Component };
 
